@@ -1,0 +1,21 @@
+# AI Innovation Lab Website
+# robots.txt for search engines
+
+User-agent: *
+Allow: /
+Disallow: /private/
+
+# Sitemap
+Sitemap: https://ailab.zju.edu.cn/sitemap.xml
+
+# Crawl delay (seconds)
+Crawl-delay: 1
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

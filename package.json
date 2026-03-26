@@ -1,0 +1,30 @@
+{
+  "name": "ai-lab-website",
+  "version": "1.0.0",
+  "description": "浙江大学 AI Innovation Lab 官方网站 - 现代化、炫酷的设计风格",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "build": "echo \"No build step required - static site\"",
+    "deploy": "git add . && git commit -m \"Deploy updates\" && git push origin main"
+  },
+  "keywords": [
+    "ai",
+    "machine-learning",
+    "deep-learning",
+    "computer-vision",
+    "nlp",
+    "zhejiang-university",
+    "website",
+    "portfolio"
+  ],
+  "author": "Zhejiang University AI Lab",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zju-ai/website.git"
+  },
+  "homepage": "https://ailab.zju.edu.cn",
+  "devDependencies": {},
+  "dependencies": {}
+}
