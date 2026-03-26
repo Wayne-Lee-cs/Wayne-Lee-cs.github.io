@@ -1,0 +1,12 @@
+theme: null
+plugins: []
+exclude:
+  - README.md
+  - LICENSE
+  - DEPLOYMENT.md
+  - PROJECT_MAP.md
+  - QUICK_START.md
+  - package.json
+  - config.json
+  - deploy.bat
+  - deploy.ps1
