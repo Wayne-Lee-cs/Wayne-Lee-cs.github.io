@@ -6,30 +6,21 @@
     <meta name="description" content="Juyang Li - 浙江大学人工智能本科生，探索AI前沿研究">
     <meta name="theme-color" content="#d4a574">
     <title>Juyang Li · Zhejiang University</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23191919' rx='12' width='100' height='100'/><text x='50' y='62' font-size='48' font-weight='600' fill='%23d4a574' text-anchor='middle' font-family='Georgia,serif'>JL</text></svg>">
 </head>
 <body>
-    <!-- Cursor glow -->
-    <div class="cursor-glow" aria-hidden="true"></div>
-
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#home" class="logo">
-                <span class="logo-mark">JL</span>
-                <span class="logo-text">Juyang Li</span>
-            </a>
+            <a href="#home" class="logo">Juyang Li</a>
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#research" class="nav-link">Research</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#contact" class="nav-link btn-nav">Contact</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             <button class="mobile-toggle" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
@@ -39,42 +30,19 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <canvas class="hero-canvas" aria-hidden="true"></canvas>
         <div class="hero-inner">
-            <div class="hero-badge">
-                <span class="badge-dot"></span>
-                Zhejiang University · Artificial Intelligence
-            </div>
-            <h1 class="hero-title">
-                <span class="title-line">AI research driven by</span>
-                <span class="title-line"><em>curiosity</em> and <em>purpose</em></span>
-            </h1>
+            <p class="hero-eyebrow">Zhejiang University · Artificial Intelligence</p>
+            <h1 class="hero-title">AI research driven by<br>curiosity and purpose</h1>
             <p class="hero-description">
-                I'm an undergraduate at Zhejiang University, majoring in Artificial Intelligence.
+                I'm an undergraduate student at Zhejiang University, majoring in Artificial Intelligence. 
                 My work focuses on pushing the boundaries of deep learning, computer vision, and natural language processing.
             </p>
             <div class="hero-actions">
-                <a href="#projects" class="btn btn-primary">
-                    <span>View Projects</span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </a>
-                <a href="#contact" class="btn btn-ghost">Get in Touch</a>
-            </div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-number" data-target="6">0</span>
-                    <span class="stat-label">Research Projects</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="4">0</span>
-                    <span class="stat-label">Team Members</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="3">0</span>
-                    <span class="stat-label">Research Areas</span>
-                </div>
+                <a href="#projects" class="btn btn-primary">View Projects</a>
+                <a href="#contact" class="btn btn-secondary">Get in Touch</a>
             </div>
         </div>
+        <div class="hero-gradient"></div>
     </section>
 
     <!-- About Section -->
@@ -88,64 +56,36 @@
         </div>
         <div class="container">
             <div class="research-grid">
-                <div class="research-card" data-delay="0">
-                    <div class="card-number">01</div>
+                <div class="research-card">
                     <div class="research-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a4 4 0 014 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0112 2z"/><path d="M8 14s-2 1-2 3 2 3 2 3"/><path d="M16 14s2 1 2 3-2 3-2 3"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                     </div>
                     <h3>Deep Learning</h3>
                     <p>神经网络、卷积神经网络和循环神经网络的研究与应用，探索模型架构的创新边界。</p>
-                    <div class="card-shine"></div>
                 </div>
-                <div class="research-card" data-delay="1">
-                    <div class="card-number">02</div>
+                <div class="research-card">
                     <div class="research-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                     </div>
                     <h3>Computer Vision</h3>
                     <p>图像识别、目标检测和图像分割技术的创新，让机器真正理解视觉世界。</p>
-                    <div class="card-shine"></div>
                 </div>
-                <div class="research-card" data-delay="2">
-                    <div class="card-number">03</div>
+                <div class="research-card">
                     <div class="research-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                     </div>
                     <h3>Natural Language Processing</h3>
                     <p>文本分析、机器翻译和智能对话系统的开发，构建人机交互的桥梁。</p>
-                    <div class="card-shine"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Marquee divider -->
-    <div class="marquee" aria-hidden="true">
-        <div class="marquee-track">
-            <span>Deep Learning</span><span>·</span>
-            <span>Computer Vision</span><span>·</span>
-            <span>NLP</span><span>·</span>
-            <span>Transformer</span><span>·</span>
-            <span>GNN</span><span>·</span>
-            <span>LLM</span><span>·</span>
-            <span>Reinforcement Learning</span><span>·</span>
-            <span>Generative AI</span><span>·</span>
-            <span>Deep Learning</span><span>·</span>
-            <span>Computer Vision</span><span>·</span>
-            <span>NLP</span><span>·</span>
-            <span>Transformer</span><span>·</span>
-            <span>GNN</span><span>·</span>
-            <span>LLM</span><span>·</span>
-            <span>Reinforcement Learning</span><span>·</span>
-            <span>Generative AI</span><span>·</span>
-        </div>
-    </div>
-
-    <!-- Team Section -->
+    <!-- Research / Team Section -->
     <section id="research" class="section section-dark">
         <div class="container">
             <div class="section-label">Team</div>
-            <h2 class="section-title">由顶尖研究者组成的<br>创新团队</h2>
+            <h2 class="section-title">由顶尖研究者组成的创新团队</h2>
             <p class="section-description">
                 A team of dedicated researchers and engineers working at the intersection of theory and application.
             </p>
@@ -153,10 +93,7 @@
         <div class="container">
             <div class="team-grid">
                 <div class="team-card">
-                    <div class="team-avatar-wrap">
-                        <span class="team-avatar">👨‍🔬</span>
-                        <span class="avatar-ring"></span>
-                    </div>
+                    <div class="team-avatar">👨‍🔬</div>
                     <div class="team-info">
                         <h3>Prof. 张教授</h3>
                         <span class="team-role">实验室主任</span>
@@ -164,10 +101,7 @@
                     </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-avatar-wrap">
-                        <span class="team-avatar">👩‍💻</span>
-                        <span class="avatar-ring"></span>
-                    </div>
+                    <div class="team-avatar">👩‍💻</div>
                     <div class="team-info">
                         <h3>李博士</h3>
                         <span class="team-role">资深研究员</span>
@@ -175,10 +109,7 @@
                     </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-avatar-wrap">
-                        <span class="team-avatar">👨‍💼</span>
-                        <span class="avatar-ring"></span>
-                    </div>
+                    <div class="team-avatar">👨‍💼</div>
                     <div class="team-info">
                         <h3>王工程师</h3>
                         <span class="team-role">技术负责人</span>
@@ -186,10 +117,7 @@
                     </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-avatar-wrap">
-                        <span class="team-avatar">👩‍🎓</span>
-                        <span class="avatar-ring"></span>
-                    </div>
+                    <div class="team-avatar">👩‍🎓</div>
                     <div class="team-info">
                         <h3>陈学生</h3>
                         <span class="team-role">研究生</span>
@@ -210,61 +138,55 @@
             </p>
         </div>
         <div class="container">
-            <div class="projects-grid">
-                <article class="project-card" data-color="#c8956c">
-                    <div class="project-card-inner">
-                        <span class="project-num">01</span>
-                        <div class="project-tag-wrap"><span class="project-tag">Deep Learning · Medical</span></div>
-                        <h3>智能医疗影像诊断</h3>
-                        <p>基于深度学习的CT及X光影像自动分析系统，辅助医生快速准确诊断。</p>
-                        <span class="project-link">Read more <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div class="projects-list">
+                <a href="#" class="project-item">
+                    <div class="project-meta">
+                        <span class="project-tag">Deep Learning · Medical</span>
                     </div>
-                </article>
-                <article class="project-card" data-color="#8b7ec8">
-                    <div class="project-card-inner">
-                        <span class="project-num">02</span>
-                        <div class="project-tag-wrap"><span class="project-tag">NLP · Transformer</span></div>
-                        <h3>多语言智能翻译</h3>
-                        <p>支持50+种语言的实时翻译系统，融合Transformer架构和多语言预训练。</p>
-                        <span class="project-link">Read more <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <h3>智能医疗影像诊断</h3>
+                    <p>基于深度学习的CT及X光影像自动分析系统，辅助医生快速准确诊断。</p>
+                    <span class="project-arrow">→</span>
+                </a>
+                <a href="#" class="project-item">
+                    <div class="project-meta">
+                        <span class="project-tag">NLP · Transformer</span>
                     </div>
-                </article>
-                <article class="project-card" data-color="#6ca5c8">
-                    <div class="project-card-inner">
-                        <span class="project-num">03</span>
-                        <div class="project-tag-wrap"><span class="project-tag">Computer Vision · Autonomous</span></div>
-                        <h3>自动驾驶感知系统</h3>
-                        <p>实时目标检测和路径规划系统，实现安全可靠的自动驾驶体验。</p>
-                        <span class="project-link">Read more <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <h3>多语言智能翻译</h3>
+                    <p>支持50+种语言的实时翻译系统，融合Transformer架构和多语言预训练。</p>
+                    <span class="project-arrow">→</span>
+                </a>
+                <a href="#" class="project-item">
+                    <div class="project-meta">
+                        <span class="project-tag">Computer Vision · Autonomous</span>
                     </div>
-                </article>
-                <article class="project-card" data-color="#6cc89b">
-                    <div class="project-card-inner">
-                        <span class="project-num">04</span>
-                        <div class="project-tag-wrap"><span class="project-tag">LLM · Reasoning</span></div>
-                        <h3>虚拟助手大模型</h3>
-                        <p>超大规模语言模型，具备多轮对话、任务执行和知识推理能力。</p>
-                        <span class="project-link">Read more <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <h3>自动驾驶感知系统</h3>
+                    <p>实时目标检测和路径规划系统，实现安全可靠的自动驾驶体验。</p>
+                    <span class="project-arrow">→</span>
+                </a>
+                <a href="#" class="project-item">
+                    <div class="project-meta">
+                        <span class="project-tag">LLM · Reasoning</span>
                     </div>
-                </article>
-                <article class="project-card" data-color="#c86c8b">
-                    <div class="project-card-inner">
-                        <span class="project-num">05</span>
-                        <div class="project-tag-wrap"><span class="project-tag">GNN · Big Data</span></div>
-                        <h3>推荐系统引擎</h3>
-                        <p>基于图神经网络的个性化推荐，处理海量用户数据和复杂关系。</p>
-                        <span class="project-link">Read more <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <h3>虚拟助手大模型</h3>
+                    <p>超大规模语言模型，具备多轮对话、任务执行和知识推理能力。</p>
+                    <span class="project-arrow">→</span>
+                </a>
+                <a href="#" class="project-item">
+                    <div class="project-meta">
+                        <span class="project-tag">GNN · Big Data</span>
                     </div>
-                </article>
-                <article class="project-card" data-color="#c8b56c">
-                    <div class="project-card-inner">
-                        <span class="project-num">06</span>
-                        <div class="project-tag-wrap"><span class="project-tag">Unsupervised · Security</span></div>
-                        <h3>异常检测平台</h3>
-                        <p>无监督学习框架，用于检测网络、金融和工业数据中的异常模式。</p>
-                        <span class="project-link">Read more <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <h3>推荐系统引擎</h3>
+                    <p>基于图神经网络的个性化推荐，处理海量用户数据和复杂关系。</p>
+                    <span class="project-arrow">→</span>
+                </a>
+                <a href="#" class="project-item">
+                    <div class="project-meta">
+                        <span class="project-tag">Unsupervised · Security</span>
                     </div>
-                </article>
+                    <h3>异常检测平台</h3>
+                    <p>无监督学习框架，用于检测网络、金融和工业数据中的异常模式。</p>
+                    <span class="project-arrow">→</span>
+                </a>
             </div>
         </div>
     </section>
@@ -272,51 +194,29 @@
     <!-- Contact Section -->
     <section id="contact" class="section section-accent">
         <div class="container">
-            <div class="contact-header">
-                <div>
-                    <div class="section-label">Contact</div>
-                    <h2 class="section-title">Let's connect</h2>
-                </div>
-                <p class="section-description">
-                    Whether you're interested in collaboration, research opportunities, or just want to connect.
-                </p>
-            </div>
+            <div class="section-label">Contact</div>
+            <h2 class="section-title">欢迎合作与交流</h2>
+            <p class="section-description">
+                Whether you're interested in collaboration, research opportunities, or just want to connect — I'd love to hear from you.
+            </p>
         </div>
         <div class="container">
             <div class="contact-grid">
                 <div class="contact-block">
-                    <div class="contact-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    </div>
                     <h3>Address</h3>
                     <p>浙江大学 计算机学院<br>杭州市西湖区余杭塘路866号</p>
-                    <p class="contact-en">866 Yuhang Tang Road, Hangzhou</p>
+                    <p class="contact-en">Zhejiang University<br>866 Yuhang Tang Road, Hangzhou, China</p>
                 </div>
                 <div class="contact-block">
-                    <div class="contact-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
-                    </div>
                     <h3>Email</h3>
                     <p><a href="mailto:lijuyang@zju.edu.cn">lijuyang@zju.edu.cn</a></p>
                 </div>
                 <div class="contact-block">
-                    <div class="contact-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                    </div>
                     <h3>Social</h3>
                     <div class="social-links">
-                        <a href="https://github.com/Wayne-Lee-cs" target="_blank" rel="noopener">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                            GitHub
-                        </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                            Twitter
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                            LinkedIn
-                        </a>
+                        <a href="https://github.com/Wayne-Lee-cs" target="_blank" rel="noopener">GitHub</a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener">Twitter</a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
                     </div>
                 </div>
             </div>
@@ -327,17 +227,10 @@
     <footer class="footer">
         <div class="container footer-inner">
             <span class="footer-logo">Juyang Li</span>
-            <nav class="footer-nav">
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#projects">Projects</a>
-                <a href="#contact">Contact</a>
-            </nav>
-            <p>&copy; 2026 Juyang Li, Zhejiang University</p>
+            <p>&copy; 2026 Juyang Li, Zhejiang University. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="script.js"></script>
 </body>
 </html>
-""
