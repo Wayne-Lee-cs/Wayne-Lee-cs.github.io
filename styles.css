@@ -355,13 +355,26 @@ a {
 .team-avatar {
     font-size: 40px;
     flex-shrink: 0;
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    max-width: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.06);
-    border-radius: 50%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.team-avatar img {
+    display: block;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 .team-info h3 {
