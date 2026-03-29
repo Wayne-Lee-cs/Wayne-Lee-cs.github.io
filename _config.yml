@@ -10,3 +10,7 @@ exclude:
   - config.json
   - deploy.bat
   - deploy.ps1
+  - personal.md
+  - _config.yml
+  - blog/_template.html
+  - .nojekyll

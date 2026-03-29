@@ -1,17 +1,17 @@
 {
-  "name": "AI Innovation Lab",
-  "short_name": "AILab",
-  "description": "浙江大学AI创新实验室 - 展示前沿AI研究和项目",
+  "name": "Juyang Li - Personal Website",
+  "short_name": "Juyang Li",
+  "description": "Juyang Li's personal website - AI research at Zhejiang University",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#667eea",
+  "background_color": "#faf9f7",
+  "theme_color": "#d4a574",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192'/><text x='50%' y='50%' font-size='100' font-weight='900' fill='white' text-anchor='middle' dominant-baseline='central'>AI</text></svg>",
+      "src": "website_head_page.jpg",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/jpeg"
     }
   ]
 }

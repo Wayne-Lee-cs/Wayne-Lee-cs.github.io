@@ -2,9 +2,8 @@
   "site": {
     "title": "AI Innovation Lab",
     "description": "浙江大学 AI创新实验室 - 探索人工智能的未来",
-    "author": "Zhejiang University AI Lab",
-    "email": "ailab@zju.edu.cn",
-    "url": "https://ailab.zju.edu.cn"
+    "author": "Juyang Li",
+    "url": "https://wayne-lee-cs.github.io"
   },
   "colors": {
     "primary": "#000000",
@@ -21,10 +20,9 @@
   },
   "team": {
     "director": {
-      "name": "Prof. 张教授",
-      "title": "实验室主任",
-      "research": "深度学习与计算机视觉",
-      "email": "zhang@zju.edu.cn"
+      "name": "Dr.Zhang",
+      "title": "班主任",
+      "research": "深度学习与计算机视觉"
     }
   },
   "projects": [

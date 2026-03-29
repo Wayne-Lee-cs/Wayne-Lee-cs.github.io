@@ -1,21 +1,10 @@
-# AI Innovation Lab Website
-# robots.txt for search engines
-
 User-agent: *
 Allow: /
-Disallow: /private/
+Disallow: /blog/_template.html
+Disallow: /blog/md-viewer.js
+Disallow: /config.json
+Disallow: /personal.md
+Disallow: /deploy.bat
+Disallow: /deploy.ps1
 
-# Sitemap
-Sitemap: https://ailab.zju.edu.cn/sitemap.xml
-
-# Crawl delay (seconds)
-Crawl-delay: 1
-
-# Specific rules for major search engines
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 0
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
+Sitemap: https://wayne-lee-cs.github.io/sitemap.xml

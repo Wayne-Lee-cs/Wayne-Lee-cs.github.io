@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Juyang Li - 浙江大学人工智能本科生，探索AI前沿">
     <meta name="theme-color" content="#d4a574">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="X-Frame-Options" content="DENY">
     <title>Juyang Li · Zhejiang University</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
@@ -105,15 +110,15 @@
         <div class="container">
             <div class="team-grid">
                 <div class="team-card">
-                    <div class="team-avatar"><img src="zc_graph.jpg" alt="Dr.Zhang"></div>
+                    <div class="team-avatar"><img src="zc_graph.jpg" alt="Dr.Zhang" loading="lazy"></div>
                     <div class="team-info">
-                        <h3><a href="https://scholar.google.com/citations?user=Clhvcw8AAAAJ&hl=zh-CN" target="_blank" rel="noopener">Dr.Zhang</a></h3>
+                        <h3><a href="https://scholar.google.com/citations?user=Clhvcw8AAAAJ&hl=zh-CN" target="_blank" rel="noopener noreferrer">Dr.Zhang</a></h3>
                         <span class="team-role">班主任</span>
                         <p>计算机专家，聚焦前沿技术(diffusion model、machine learning...)</p>
                     </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-avatar"><img src="website_head_page.jpg" alt="Juyang Li"></div>
+                    <div class="team-avatar"><img src="website_head_page.jpg" alt="Juyang Li" loading="lazy"></div>
                     <div class="team-info">
                         <h3>Juyang Li</h3>
                         <span class="team-role">菜菜小登</span>
@@ -198,14 +203,18 @@
         </div>
         <div class="container">
             <div class="blog-grid">
-                <!-- Example post 1 -->
-                <a href="blog/sample-post.html" class="blog-card">
+                <!-- Markdown post -->
+                <a href="blog/md-viewer.html?file=hello-world.md" class="blog-card">
                     <div class="blog-date">2026-03-29</div>
                     <h3>第一篇博客：Hello World</h3>
-                    <p>这是一篇示例博客文章，你可以替换为自己的内容。</p>
-                    <span class="blog-tag">Getting Started</span>
+                    <p>用 Markdown 写的示例博客，展示代码块、表格、引用等格式。</p>
+                    <span class="blog-tag">Markdown</span>
                 </a>
-                <!-- Add more posts here following the same pattern -->
+                <!-- Add more posts here:
+                     Markdown: href="blog/md-viewer.html?file=your-post.md"
+                     PDF:      href="blog/md-viewer.html?file=your-paper.pdf"
+                     HTML:     href="blog/your-post.html"
+                -->
             </div>
         </div>
     </section>
@@ -228,14 +237,14 @@
                 </div>
                 <div class="contact-block">
                     <h3>Email</h3>
-                    <p><a href="mailto:lijuyang@zju.edu.cn">lijuyang@zju.edu.cn</a></p>
+                    <p><a href="#" class="email-link" data-user="lijuyang" data-domain="zju.edu.cn">Click to reveal</a></p>
                 </div>
                 <div class="contact-block">
                     <h3>Social</h3>
                     <div class="social-links">
-                        <a href="https://github.com/Wayne-Lee-cs" target="_blank" rel="noopener">GitHub</a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener">Twitter</a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+                        <a href="https://github.com/Wayne-Lee-cs" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                     </div>
                 </div>
             </div>
@@ -250,6 +259,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

@@ -1,290 +1,327 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Mobile menu toggle
-    const toggle = document.querySelector('.mobile-toggle');
-    const menu = document.querySelector('.nav-menu');
+﻿document.addEventListener('DOMContentLoaded', function () {
+    // ===== Mobile menu toggle =====
+    var toggle = document.querySelector('.mobile-toggle');
+    var menu = document.querySelector('.nav-menu');
     if (toggle && menu) {
-        toggle.addEventListener('click', () => menu.classList.toggle('open'));
-        menu.querySelectorAll('.nav-link').forEach(link =>
-            link.addEventListener('click', () => menu.classList.remove('open'))
-        );
+        toggle.addEventListener('click', function() { menu.classList.toggle('open'); });
+        var links = menu.querySelectorAll('.nav-link');
+        for (var i = 0; i < links.length; i++) {
+            links[i].addEventListener('click', function() { menu.classList.remove('open'); });
+        }
     }
 
-    // Active nav link on scroll
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-link');
-    function updateActiveNav() {
-        let current = '';
-        sections.forEach(s => {
-            if (scrollY >= s.offsetTop - 200) current = s.id;
-        });
-        navLinks.forEach(l => {
-            l.classList.toggle('active', l.getAttribute('href').slice(1) === current);
-        });
+    // ===== Throttled scroll handler (single handler, 16ms throttle) =====
+    var sections = document.querySelectorAll('section');
+    var navLinks = document.querySelectorAll('.nav-link');
+    var navbar = document.querySelector('.navbar');
+    var scrollTicking = false;
+
+    function onScroll() {
+        scrollTicking = false;
+        var sy = window.scrollY;
+
+        // Active nav
+        var current = '';
+        for (var i = 0; i < sections.length; i++) {
+            if (sy >= sections[i].offsetTop - 200) current = sections[i].id;
+        }
+        for (var j = 0; j < navLinks.length; j++) {
+            var href = navLinks[j].getAttribute('href');
+            navLinks[j].classList.toggle('active', href && href.slice(1) === current);
+        }
+
+        // Navbar border
+        navbar.style.borderBottomColor = sy > 10 ? 'var(--color-border)' : 'transparent';
     }
-    window.addEventListener('scroll', updateActiveNav, { passive: true });
 
-    // Fade-in on scroll
-    const observer = new IntersectionObserver(
-        entries => entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                observer.unobserve(e.target);
-            }
-        }),
-        { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
-    );
-    document.querySelectorAll(
-        '.research-card, .team-card, .project-item, .contact-block, .section-title, .section-description'
-    ).forEach(el => {
-        el.classList.add('fade-in');
-        observer.observe(el);
-    });
-
-    // Navbar scroll effect
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', () => {
-        navbar.style.borderBottomColor = scrollY > 10 ? 'var(--color-border)' : 'transparent';
+    window.addEventListener('scroll', function() {
+        if (!scrollTicking) {
+            scrollTicking = true;
+            requestAnimationFrame(onScroll);
+        }
     }, { passive: true });
 
-    // ===== Neural Network Canvas Animation =====
-    const canvas = document.getElementById('neural-canvas');
-    if (canvas) {
-        const ctx = canvas.getContext('2d');
-        let rw, rh;
-        const dpr = Math.min(devicePixelRatio, 2);
-        let mouseX = 0, mouseY = 0, targetRotY = 0, targetRotX = 0;
-        let rotY = 0, rotX = 0.3;
+    // ===== IntersectionObserver for fade-in =====
+    if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+            for (var i = 0; i < entries.length; i++) {
+                if (entries[i].isIntersecting) {
+                    entries[i].target.classList.add('visible');
+                    observer.unobserve(entries[i].target);
+                }
+            }
+        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
+        var fadeEls = document.querySelectorAll(
+            '.research-card, .team-card, .project-item, .contact-block, .section-title, .section-description'
+        );
+        for (var k = 0; k < fadeEls.length; k++) {
+            fadeEls[k].classList.add('fade-in');
+            observer.observe(fadeEls[k]);
+        }
+    }
+
+    // ===== Email obfuscation =====
+    var emailLinks = document.querySelectorAll('.email-link');
+    for (var m = 0; m < emailLinks.length; m++) {
+        emailLinks[m].addEventListener('click', function(e) {
+            e.preventDefault();
+            var user = this.dataset.user;
+            var domain = this.dataset.domain;
+            if (!user || !domain) return;
+            var email = user + '@' + domain;
+            this.href = 'mailto:' + email;
+            this.textContent = email;
+            this.removeAttribute('data-user');
+            this.removeAttribute('data-domain');
+            window.location.href = 'mailto:' + email;
+        });
+    }
+
+    // ===== Optimized Canvas Animation =====
+    var canvas = document.getElementById('neural-canvas');
+    if (canvas) {
+        var ctx = canvas.getContext('2d');
+        var rw, rh, animId = null, isVisible = true;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var mouseX = 0, mouseY = 0;
+        var rotY = 0, rotX = 0.3;
+
+        // Debounced resize
+        var resizeTimer;
         function resize() {
-            const r = canvas.parentElement.getBoundingClientRect();
+            var r = canvas.parentElement.getBoundingClientRect();
             rw = r.width; rh = r.height;
             canvas.width = rw * dpr; canvas.height = rh * dpr;
             canvas.style.width = rw + 'px'; canvas.style.height = rh + 'px';
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
         resize();
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(resize, 150);
+        });
 
-        canvas.parentElement.addEventListener('mousemove', e => {
-            const r = canvas.parentElement.getBoundingClientRect();
+        // Mouse tracking
+        canvas.parentElement.addEventListener('mousemove', function(e) {
+            var r = canvas.parentElement.getBoundingClientRect();
             mouseX = (e.clientX - r.left) / rw - 0.5;
             mouseY = (e.clientY - r.top) / rh - 0.5;
-        });
-        canvas.parentElement.addEventListener('mouseleave', () => { mouseX = 0; mouseY = 0; });
+        }, { passive: true });
+        canvas.parentElement.addEventListener('mouseleave', function() { mouseX = 0; mouseY = 0; });
 
-        // Generate sphere points
-        const points = [];
-        const latLines = 12, lonLines = 20, totalPts = 500;
-        // Grid points
-        for (let i = 0; i <= latLines; i++) {
-            const phi = (Math.PI / latLines) * i;
-            const ptsInRing = Math.max(4, Math.round(Math.sin(phi) * lonLines));
-            for (let j = 0; j < ptsInRing; j++) {
-                const theta = (2 * Math.PI / ptsInRing) * j;
+        // Reduced point count for performance (250 instead of 500)
+        var points = [];
+        var latLines = 10, lonLines = 16, totalPts = 250;
+        for (var i = 0; i <= latLines; i++) {
+            var phi = (Math.PI / latLines) * i;
+            var ptsInRing = Math.max(3, Math.round(Math.sin(phi) * lonLines));
+            for (var j = 0; j < ptsInRing; j++) {
+                var theta = (2 * Math.PI / ptsInRing) * j;
                 points.push({
-                    phi, theta,
                     ox: Math.sin(phi) * Math.cos(theta),
                     oy: Math.cos(phi),
                     oz: Math.sin(phi) * Math.sin(theta),
-                    size: 1.2 + Math.random() * 0.8,
-                    pulse: Math.random() * Math.PI * 2
+                    size: 1 + Math.random() * 0.8,
+                    pulse: Math.random() * 6.28
                 });
             }
         }
-        // Extra random surface points
-        for (let i = points.length; i < totalPts; i++) {
-            const phi = Math.acos(2 * Math.random() - 1);
-            const theta = Math.random() * Math.PI * 2;
+        for (var n = points.length; n < totalPts; n++) {
+            var rPhi = Math.acos(2 * Math.random() - 1);
+            var rTheta = Math.random() * 6.28;
             points.push({
-                phi, theta,
-                ox: Math.sin(phi) * Math.cos(theta),
-                oy: Math.cos(phi),
-                oz: Math.sin(phi) * Math.sin(theta),
-                size: 0.6 + Math.random() * 0.6,
-                pulse: Math.random() * Math.PI * 2
+                ox: Math.sin(rPhi) * Math.cos(rTheta),
+                oy: Math.cos(rPhi),
+                oz: Math.sin(rPhi) * Math.sin(rTheta),
+                size: 0.5 + Math.random() * 0.5,
+                pulse: Math.random() * 6.28
             });
         }
 
-        // Scan beam data
-        let scanAngle = 0;
+        // Pre-allocate projected array (avoid GC pressure from .map every frame)
+        var projected = new Array(points.length);
+        for (var p = 0; p < points.length; p++) {
+            projected[p] = { px: 0, py: 0, z: 0, size: 0, pulse: 0, ox: 0, oz: 0 };
+        }
 
-        // Shooting particles (data streams)
-        const streams = [];
-        for (let i = 0; i < 15; i++) {
+        // Reduced streams
+        var streams = [];
+        for (var s = 0; s < 8; s++) {
             streams.push({
                 startPhi: Math.acos(2 * Math.random() - 1),
-                startTheta: Math.random() * Math.PI * 2,
+                startTheta: Math.random() * 6.28,
                 endPhi: Math.acos(2 * Math.random() - 1),
-                endTheta: Math.random() * Math.PI * 2,
+                endTheta: Math.random() * 6.28,
                 progress: Math.random(),
-                speed: 0.003 + Math.random() * 0.006,
-                width: 0.5 + Math.random() * 1
+                speed: 0.003 + Math.random() * 0.005,
+                width: 0.5 + Math.random() * 0.8
             });
         }
 
-        let t = 0;
-        function project(x, y, z) {
-            // Rotate Y
-            const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-            let x1 = x * cosY - z * sinY, z1 = x * sinY + z * cosY;
-            // Rotate X
-            const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-            let y1 = y * cosX - z1 * sinX, z2 = y * sinX + z1 * cosX;
-            return { x: x1, y: y1, z: z2 };
+        var scanAngle = 0, t = 0;
+        var cosY, sinY, cosX, sinX; // cached per frame
+
+        function projectPt(x, y, z) {
+            var x1 = x * cosY - z * sinY, z1 = x * sinY + z * cosY;
+            return { x: x1, y: y * cosX - z1 * sinX, z: y * sinX + z1 * cosX };
         }
 
         function draw() {
+            if (!isVisible) { animId = null; return; }
             t += 0.016;
             ctx.clearRect(0, 0, rw, rh);
 
-            // Smooth rotation follow mouse
-            targetRotY = mouseX * 1.2;
-            targetRotX = 0.3 + mouseY * 0.8;
-            rotY += (targetRotY - rotY) * 0.03 + 0.003; // auto-rotate + mouse
+            // Smooth rotation
+            var targetRotY = mouseX * 1.2;
+            var targetRotX = 0.3 + mouseY * 0.8;
+            rotY += (targetRotY - rotY) * 0.03 + 0.003;
             rotX += (targetRotX - rotX) * 0.03;
 
-            const cx = rw / 2, cy = rh / 2;
-            const R = Math.min(rw, rh) * 0.36;
+            // Cache trig values for this frame
+            cosY = Math.cos(rotY); sinY = Math.sin(rotY);
+            cosX = Math.cos(rotX); sinX = Math.sin(rotX);
+
+            var cx = rw / 2, cy = rh / 2;
+            var R = Math.min(rw, rh) * 0.36;
             scanAngle += 0.015;
 
-            // === Background glow ===
-            const bg = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.8);
+            // Background glow (single gradient, reuse)
+            var bg = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.8);
             bg.addColorStop(0, 'rgba(200,149,108,0.05)');
             bg.addColorStop(0.5, 'rgba(140,100,70,0.02)');
             bg.addColorStop(1, 'transparent');
             ctx.fillStyle = bg;
             ctx.fillRect(0, 0, rw, rh);
 
-            // Project and sort all points by depth
-            const projected = points.map((p, i) => {
-                const pr = project(p.ox, p.oy, p.oz);
-                return { ...p, px: cx + pr.x * R, py: cy + pr.y * R, z: pr.z, idx: i };
-            }).sort((a, b) => a.z - b.z);
+            // Project points (reuse objects, no allocation)
+            for (var i = 0; i < points.length; i++) {
+                var pt = points[i];
+                var pr = projectPt(pt.ox, pt.oy, pt.oz);
+                var proj = projected[i];
+                proj.px = cx + pr.x * R;
+                proj.py = cy + pr.y * R;
+                proj.z = pr.z;
+                proj.size = pt.size;
+                proj.pulse = pt.pulse;
+                proj.ox = pt.ox;
+                proj.oz = pt.oz;
+            }
 
-            // === Draw connections (wireframe) ===
+            // Sort by depth (in-place)
+            projected.sort(function(a, b) { return a.z - b.z; });
+
+            // Draw connections 鈥?batch into single path per alpha range
             ctx.lineWidth = 0.5;
-            for (let i = 0; i < projected.length; i++) {
-                for (let j = i + 1; j < Math.min(i + 8, projected.length); j++) {
-                    const a = projected[i], b = projected[j];
-                    const dx = a.px - b.px, dy = a.py - b.py;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < R * 0.35) {
-                        const depthAlpha = ((a.z + b.z) / 2 + 1) * 0.5;
-                        const alpha = (1 - dist / (R * 0.35)) * 0.12 * depthAlpha;
+            var threshold = R * 0.3;
+            for (var i = 0; i < projected.length; i++) {
+                for (var j = i + 1; j < Math.min(i + 6, projected.length); j++) {
+                    var a = projected[i], b = projected[j];
+                    var dx = a.px - b.px, dy = a.py - b.py;
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < threshold) {
+                        var alpha = (1 - dist / threshold) * 0.1 * ((a.z + b.z) / 2 + 1) * 0.5;
                         ctx.beginPath();
                         ctx.moveTo(a.px, a.py);
                         ctx.lineTo(b.px, b.py);
-                        ctx.strokeStyle = `rgba(200,170,140,${alpha})`;
+                        ctx.strokeStyle = 'rgba(200,170,140,' + alpha + ')';
                         ctx.stroke();
                     }
                 }
             }
 
-            // === Scan beam ===
-            const scanX = Math.cos(scanAngle);
-            const scanZ = Math.sin(scanAngle);
-            projected.forEach(p => {
-                const dot = p.ox * scanX + p.oz * scanZ;
+            // Scan beam 鈥?only check front-facing points
+            var scanX = Math.cos(scanAngle), scanZ = Math.sin(scanAngle);
+            for (var i = 0; i < projected.length; i++) {
+                var p = projected[i];
+                if (p.z < 0) continue; // skip back-facing
+                var dot = p.ox * scanX + p.oz * scanZ;
                 if (dot > 0.95) {
-                    const glow = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, 12);
-                    glow.addColorStop(0, `rgba(255,200,120,${0.3 * (p.z + 1) * 0.5})`);
+                    var glow = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, 10);
+                    glow.addColorStop(0, 'rgba(255,200,120,' + (0.25 * (p.z + 1) * 0.5) + ')');
                     glow.addColorStop(1, 'transparent');
                     ctx.fillStyle = glow;
                     ctx.beginPath();
-                    ctx.arc(p.px, p.py, 12, 0, Math.PI * 2);
+                    ctx.arc(p.px, p.py, 10, 0, 6.28);
                     ctx.fill();
                 }
-            });
+            }
 
-            // === Data streams (arcs on surface) ===
-            streams.forEach(s => {
-                s.progress += s.speed;
-                if (s.progress > 1) {
-                    s.progress = 0;
-                    s.startPhi = s.endPhi; s.startTheta = s.endTheta;
-                    s.endPhi = Math.acos(2 * Math.random() - 1);
-                    s.endTheta = Math.random() * Math.PI * 2;
+            // Data streams
+            for (var si = 0; si < streams.length; si++) {
+                var st = streams[si];
+                st.progress += st.speed;
+                if (st.progress > 1) {
+                    st.progress = 0;
+                    st.startPhi = st.endPhi; st.startTheta = st.endTheta;
+                    st.endPhi = Math.acos(2 * Math.random() - 1);
+                    st.endTheta = Math.random() * 6.28;
                 }
-                const steps = 20;
                 ctx.beginPath();
-                for (let i = 0; i <= steps; i++) {
-                    const frac = i / steps;
-                    if (frac > s.progress) break;
-                    const fade = Math.max(0, 1 - (s.progress - frac) * 5);
-                    const phi = s.startPhi + (s.endPhi - s.startPhi) * frac;
-                    const theta = s.startTheta + (s.endTheta - s.startTheta) * frac;
-                    const sx = Math.sin(phi) * Math.cos(theta);
-                    const sy = Math.cos(phi);
-                    const sz = Math.sin(phi) * Math.sin(theta);
-                    const pr = project(sx, sy, sz);
-                    const px = cx + pr.x * R, py = cy + pr.y * R;
-                    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+                for (var step = 0; step <= 15; step++) {
+                    var frac = step / 15;
+                    if (frac > st.progress) break;
+                    var sPhi = st.startPhi + (st.endPhi - st.startPhi) * frac;
+                    var sTheta = st.startTheta + (st.endTheta - st.startTheta) * frac;
+                    var spr = projectPt(Math.sin(sPhi) * Math.cos(sTheta), Math.cos(sPhi), Math.sin(sPhi) * Math.sin(sTheta));
+                    var spx = cx + spr.x * R, spy = cy + spr.y * R;
+                    if (step === 0) ctx.moveTo(spx, spy); else ctx.lineTo(spx, spy);
                 }
-                ctx.strokeStyle = `rgba(255,180,100,0.25)`;
-                ctx.lineWidth = s.width;
+                ctx.strokeStyle = 'rgba(255,180,100,0.2)';
+                ctx.lineWidth = st.width;
                 ctx.stroke();
+            }
 
-                // Head glow
-                const headPhi = s.startPhi + (s.endPhi - s.startPhi) * s.progress;
-                const headTheta = s.startTheta + (s.endTheta - s.startTheta) * s.progress;
-                const hx = Math.sin(headPhi) * Math.cos(headTheta);
-                const hy = Math.cos(headPhi);
-                const hz = Math.sin(headPhi) * Math.sin(headTheta);
-                const hp = project(hx, hy, hz);
-                if (hp.z > -0.2) {
-                    const hpx = cx + hp.x * R, hpy = cy + hp.y * R;
-                    const hg = ctx.createRadialGradient(hpx, hpy, 0, hpx, hpy, 8);
-                    hg.addColorStop(0, 'rgba(255,200,120,0.6)');
-                    hg.addColorStop(1, 'transparent');
-                    ctx.fillStyle = hg;
-                    ctx.beginPath();
-                    ctx.arc(hpx, hpy, 8, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            });
+            // Draw points 鈥?skip glow for back-facing, reduce gradient calls
+            for (var i = 0; i < projected.length; i++) {
+                var p = projected[i];
+                var depth = (p.z + 1) * 0.5;
+                var pulse = Math.sin(t * 2 + p.pulse) * 0.3 + 0.7;
+                var alpha = depth * 0.65 * pulse;
+                var sz = p.size * (0.5 + depth * 0.5);
 
-            // === Draw points ===
-            projected.forEach(p => {
-                const depth = (p.z + 1) * 0.5; // 0 = back, 1 = front
-                const pulse = Math.sin(t * 2 + p.pulse) * 0.3 + 0.7;
-                const alpha = depth * 0.7 * pulse;
-                const sz = p.size * (0.5 + depth * 0.5);
-
-                // Glow for front-facing points
-                if (depth > 0.5) {
-                    const g = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, sz * 5);
-                    g.addColorStop(0, `rgba(200,160,120,${alpha * 0.15})`);
-                    g.addColorStop(1, 'transparent');
-                    ctx.fillStyle = g;
-                    ctx.beginPath();
-                    ctx.arc(p.px, p.py, sz * 5, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-
-                // Core dot
                 ctx.beginPath();
-                ctx.arc(p.px, p.py, sz, 0, Math.PI * 2);
-                const r = 180 + depth * 60, g2 = 140 + depth * 40, b = 100 + depth * 30;
-                ctx.fillStyle = `rgba(${r|0},${g2|0},${b|0},${alpha})`;
+                ctx.arc(p.px, p.py, sz, 0, 6.28);
+                var r = 180 + depth * 60 | 0, g = 140 + depth * 40 | 0, b = 100 + depth * 30 | 0;
+                ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
                 ctx.fill();
-            });
+            }
 
-            // === Outer ring ===
+            // Outer ring + arc
             ctx.beginPath();
-            ctx.arc(cx, cy, R * 1.05, 0, Math.PI * 2);
+            ctx.arc(cx, cy, R * 1.05, 0, 6.28);
             ctx.strokeStyle = 'rgba(200,149,108,0.06)';
             ctx.lineWidth = 1;
             ctx.stroke();
 
-            // === Rotating arc accent ===
             ctx.beginPath();
             ctx.arc(cx, cy, R * 1.05, scanAngle, scanAngle + 0.8);
             ctx.strokeStyle = 'rgba(255,180,100,0.2)';
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            requestAnimationFrame(draw);
+            animId = requestAnimationFrame(draw);
         }
-        draw();
+
+        // Visibility API 鈥?pause animation when tab is hidden
+        document.addEventListener('visibilitychange', function() {
+            isVisible = !document.hidden;
+            if (isVisible && !animId) {
+                animId = requestAnimationFrame(draw);
+            }
+        });
+
+        // Only start animation when hero is in viewport
+        if ('IntersectionObserver' in window) {
+            var heroObs = new IntersectionObserver(function(entries) {
+                isVisible = entries[0].isIntersecting && !document.hidden;
+                if (isVisible && !animId) {
+                    animId = requestAnimationFrame(draw);
+                }
+            }, { threshold: 0 });
+            heroObs.observe(canvas.parentElement);
+        } else {
+            animId = requestAnimationFrame(draw);
+        }
     }
 });

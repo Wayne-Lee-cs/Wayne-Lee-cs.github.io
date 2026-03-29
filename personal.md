@@ -2,16 +2,15 @@
 
 ## 写新博客/笔记
 
-1. 复制 `blog/_template.html`，重命名为你的文章名：
-   ```
-   blog/_template.html → blog/my-article.html
-   ```
+现在支持三种格式：Markdown、PDF、HTML。
 
-2. 编辑新文件，修改标注了 ✏️ 的地方：标题、日期、标签、正文
+### 方式一：Markdown（推荐）
 
+1. 在 `blog/` 目录下新建 `.md` 文件，比如 `blog/my-note.md`
+2. 直接用 Markdown 语法写内容（支持标题、代码块、表格、图片、引用等）
 3. 在 `index.html` 的 `<div class="blog-grid">` 里添加卡片：
    ```html
-   <a href="blog/my-article.html" class="blog-card">
+   <a href="blog/md-viewer.html?file=my-note.md" class="blog-card">
        <div class="blog-date">2026-04-01</div>
        <h3>文章标题</h3>
        <p>简短描述...</p>
@@ -19,11 +18,32 @@
    </a>
    ```
 
+### 方式二：PDF
+
+1. 把 PDF 文件放到 `blog/` 目录，比如 `blog/my-paper.pdf`
+2. 在 `index.html` 的 blog-grid 里添加卡片：
+   ```html
+   <a href="blog/md-viewer.html?file=my-paper.pdf" class="blog-card">
+       <div class="blog-date">2026-04-01</div>
+       <h3>论文标题</h3>
+       <p>简短描述...</p>
+       <span class="blog-tag">PDF</span>
+   </a>
+   ```
+
+### 方式三：HTML（完全自定义）
+
+1. 复制 `blog/_template.html`，重命名编辑
+2. 卡片链接直接指向 HTML 文件：
+   ```html
+   <a href="blog/my-post.html" class="blog-card">...</a>
+   ```
+
 ## 插入图片
 
 - 图片放到项目根目录或 `images/` 文件夹
-- 博客文章里引用：`<img src="../images/xxx.jpg" alt="描述">`
-- 首页引用：`<img src="images/xxx.jpg" alt="描述">`
+- Markdown 里引用：`![描述](../images/xxx.jpg)`
+- HTML 博客里引用：`<img src="../images/xxx.jpg" alt="描述">`
 
 ## 修改团队成员照片
 

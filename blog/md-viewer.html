@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'self'">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <title>Blog · Juyang Li</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" href="../website_head_page.jpg" type="image/jpeg">
+    <style>
+        .article { max-width: 780px; margin: 0 auto; padding: 120px 24px 80px; }
+        .article-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 14px; color: var(--color-accent, #c8956c);
+            margin-bottom: 40px; text-decoration: none;
+        }
+        .article-back:hover { text-decoration: underline; }
+        .loading { text-align: center; padding: 60px 0; color: var(--color-text-light, #9b9590); font-size: 15px; }
+        .error { text-align: center; padding: 60px 0; color: #c0392b; font-size: 15px; }
+
+        /* Markdown rendered content */
+        .md-content { font-size: 16px; line-height: 1.85; color: var(--color-text-secondary, #5c5650); }
+        .md-content h1 { font-family: Georgia, serif; font-size: 36px; font-weight: 400; margin: 0 0 16px; letter-spacing: -0.02em; color: var(--color-text, #1a1a1a); }
+        .md-content h2 { font-size: 24px; font-weight: 600; margin: 48px 0 16px; color: var(--color-text, #1a1a1a); padding-bottom: 8px; border-bottom: 1px solid var(--color-border, #e8e4df); }
+        .md-content h3 { font-size: 20px; font-weight: 600; margin: 32px 0 12px; color: var(--color-text, #1a1a1a); }
+        .md-content p { margin-bottom: 20px; }
+        .md-content a { color: var(--color-accent, #c8956c); text-decoration: underline; text-underline-offset: 3px; }
+        .md-content a:hover { color: #b07a52; }
+        .md-content code { background: #f0ede8; padding: 2px 6px; border-radius: 4px; font-size: 14px; font-family: 'Consolas', 'Monaco', monospace; }
+        .md-content pre { background: #1a1a1a; color: #e0d8cf; padding: 20px; border-radius: 12px; overflow-x: auto; margin: 24px 0; font-size: 14px; line-height: 1.6; }
+        .md-content pre code { background: none; padding: 0; color: inherit; }
+        .md-content img { max-width: 100%; border-radius: 12px; margin: 24px 0; display: block; }
+        .md-content blockquote { border-left: 3px solid var(--color-accent, #c8956c); margin: 24px 0; padding: 12px 20px; background: rgba(200,149,108,0.05); border-radius: 0 8px 8px 0; }
+        .md-content blockquote p { margin-bottom: 0; color: var(--color-text-secondary, #6b6560); }
+        .md-content ul, .md-content ol { margin: 16px 0; padding-left: 24px; }
+        .md-content li { margin-bottom: 8px; }
+        .md-content table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+        .md-content th, .md-content td { padding: 10px 14px; border: 1px solid var(--color-border, #e8e4df); text-align: left; }
+        .md-content th { background: #f5f3f0; font-weight: 600; }
+        .md-content hr { border: none; border-top: 1px solid var(--color-border, #e8e4df); margin: 40px 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">Juyang Li</a>
+        </div>
+    </nav>
+
+    <article class="article">
+        <a href="../index.html#blog" class="article-back">← Back to Blog</a>
+        <div id="content" class="loading">Loading...</div>
+    </article>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js" crossorigin="anonymous"></script>
+    <script src="md-viewer.js"></script>
+</body>
+</html>

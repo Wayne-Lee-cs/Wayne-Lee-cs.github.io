@@ -30,6 +30,11 @@ html {
     font-size: 16px;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .fade-in { animation: none !important; opacity: 1; transform: none; }
+}
+
 body {
     font-family: var(--font-sans);
     color: var(--color-text);
@@ -71,6 +76,7 @@ a {
     border-bottom: 1px solid var(--color-border);
     display: flex;
     align-items: center;
+    will-change: border-color;
 }
 
 .nav-container {
@@ -164,6 +170,7 @@ a {
     overflow: hidden;
     background: radial-gradient(ellipse at center, #1a1816 0%, #0f0e0d 100%);
     box-shadow: 0 40px 80px rgba(0,0,0,0.12), inset 0 0 80px rgba(200,149,108,0.03);
+    contain: strict;
 }
 
 #neural-canvas {
@@ -648,10 +655,12 @@ a {
 .fade-in {
     opacity: 0;
     transform: translateY(24px);
+    will-change: opacity, transform;
 }
 
 .fade-in.visible {
     animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    will-change: auto;
 }
 
 /* ===== Responsive ===== */
@@ -687,7 +696,6 @@ a {
         left: 0;
         right: 0;
         background: rgba(250, 249, 247, 0.98);
-        backdrop-filter: blur(20px);
         flex-direction: column;
         padding: 24px clamp(20px, 5vw, 80px);
         gap: 20px;
