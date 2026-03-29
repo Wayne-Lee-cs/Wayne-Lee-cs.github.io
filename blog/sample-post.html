@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一篇博客：Hello World · Juyang Li</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" href="../website_head_page.jpg" type="image/jpeg">
+    <style>
+        .article { max-width: 720px; margin: 0 auto; padding: 120px 24px 80px; }
+        .article-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 14px; color: var(--color-accent, #c8956c);
+            margin-bottom: 40px; text-decoration: none;
+        }
+        .article-back:hover { text-decoration: underline; }
+        .article-meta { font-size: 13px; color: var(--color-text-light, #9b9590); margin-bottom: 32px; }
+        .article h1 { font-family: var(--font-serif, Georgia, serif); font-size: 36px; font-weight: 400; margin-bottom: 16px; letter-spacing: -0.02em; }
+        .article-content { font-size: 16px; line-height: 1.85; color: var(--color-text-secondary, #5c5650); }
+        .article-content p { margin-bottom: 20px; }
+        .article-content h2 { font-size: 22px; font-weight: 600; margin: 40px 0 16px; color: var(--color-text, #1a1a1a); }
+        .article-content code { background: #f0ede8; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+        .article-content pre { background: #1a1a1a; color: #e0d8cf; padding: 20px; border-radius: 12px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">Juyang Li</a>
+        </div>
+    </nav>
+
+    <article class="article">
+        <a href="../index.html#blog" class="article-back">← Back to Blog</a>
+        <h1>第一篇博客：Hello World</h1>
+        <div class="article-meta">2026-03-29 · Getting Started</div>
+        <div class="article-content">
+            <p>这是一篇示例博客文章。你可以在这里写任何内容：学习笔记、技术分享、研究心得等。</p>
+            <h2>如何写博客</h2>
+            <p>复制 <code>blog/_template.html</code> 文件，重命名后编辑内容即可。</p>
+            <p>写完后在 <code>index.html</code> 的 blog-grid 里添加一个新的 blog-card 链接到你的文章。</p>
+        </div>
+    </article>
+</body>
+</html>

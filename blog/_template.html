@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ✏️ 修改标题 -->
+    <title>文章标题 · Juyang Li</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" href="../website_head_page.jpg" type="image/jpeg">
+    <style>
+        .article { max-width: 720px; margin: 0 auto; padding: 120px 24px 80px; }
+        .article-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 14px; color: var(--color-accent, #c8956c);
+            margin-bottom: 40px; text-decoration: none;
+        }
+        .article-back:hover { text-decoration: underline; }
+        .article-meta { font-size: 13px; color: var(--color-text-light, #9b9590); margin-bottom: 32px; }
+        .article h1 { font-family: var(--font-serif, Georgia, serif); font-size: 36px; font-weight: 400; margin-bottom: 16px; letter-spacing: -0.02em; }
+        .article-content { font-size: 16px; line-height: 1.85; color: var(--color-text-secondary, #5c5650); }
+        .article-content p { margin-bottom: 20px; }
+        .article-content h2 { font-size: 22px; font-weight: 600; margin: 40px 0 16px; color: var(--color-text, #1a1a1a); }
+        .article-content code { background: #f0ede8; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+        .article-content pre { background: #1a1a1a; color: #e0d8cf; padding: 20px; border-radius: 12px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+        .article-content img { max-width: 100%; border-radius: 12px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">Juyang Li</a>
+        </div>
+    </nav>
+
+    <article class="article">
+        <a href="../index.html#blog" class="article-back">← Back to Blog</a>
+
+        <!-- ✏️ 修改标题 -->
+        <h1>文章标题</h1>
+
+        <!-- ✏️ 修改日期和标签 -->
+        <div class="article-meta">2026-XX-XX · Tag</div>
+
+        <div class="article-content">
+            <!-- ✏️ 在这里写正文 -->
+            <p>正文内容...</p>
+
+            <h2>小标题</h2>
+            <p>更多内容...</p>
+
+            <!-- 插入代码块 -->
+            <pre><code>print("Hello World")</code></pre>
+
+            <!-- 插入图片 -->
+            <!-- <img src="../images/your-image.jpg" alt="描述"> -->
+        </div>
+    </article>
+</body>
+</html>
