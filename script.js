@@ -3,10 +3,17 @@
     var toggle = document.querySelector('.mobile-toggle');
     var menu = document.querySelector('.nav-menu');
     if (toggle && menu) {
-        toggle.addEventListener('click', function() { menu.classList.toggle('open'); });
+        function closeMenu() {
+            menu.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        toggle.addEventListener('click', function() {
+            menu.classList.toggle('open');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+        });
         var links = menu.querySelectorAll('.nav-link');
         for (var i = 0; i < links.length; i++) {
-            links[i].addEventListener('click', function() { menu.classList.remove('open'); });
+            links[i].addEventListener('click', closeMenu);
         }
     }
 
@@ -53,7 +60,7 @@
         }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
         var fadeEls = document.querySelectorAll(
-            '.research-card, .team-card, .project-item, .contact-block, .section-title, .section-description'
+            '.research-card, .team-card, .project-item, .contact-block, .section-title, .section-description, .timeline-item, .pub-item, .blog-card'
         );
         for (var k = 0; k < fadeEls.length; k++) {
             fadeEls[k].classList.add('fade-in');
@@ -75,6 +82,130 @@
             this.removeAttribute('data-user');
             this.removeAttribute('data-domain');
             window.location.href = 'mailto:' + email;
+        });
+    }
+
+    // ===== Dark Mode Toggle =====
+    var themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', function() {
+            var current = document.documentElement.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        });
+    }
+
+    // ===== i18n Toggle =====
+    var i18n = {
+        zh: {
+            'nav.home':'首页','nav.about':'关于','nav.timeline':'经历','nav.projects':'项目','nav.publications':'论文','nav.blog':'博客','nav.contact':'联系',
+            'hero.title':'以好奇心和使命感<br>驱动AI研究','hero.desc':'我是浙江大学人工智能专业的本科生，专注于深度学习、计算机视觉和具身智能的前沿研究。','hero.projects':'查看项目','hero.contact':'联系我',
+            'about.title':'探索人工智能的<br>前沿领域','about.desc':'我们的使命是推动人工智能技术的发展，并将其应用于解决实际问题。',
+            'about.dl':'神经网络、卷积神经网络和循环神经网络的研究与应用，探索模型架构的创新边界。',
+            'about.cv':'图像识别、目标检测和图像分割技术的创新，让机器真正理解视觉世界。',
+            'about.ei':'融合感知、决策与控制的具身智能研究，让AI在物理世界中自主交互与学习。',
+            'about.infra':'高性能计算集群、分布式训练框架与模型部署流水线的构建与优化，为大规模AI研发提供坚实的基础设施支撑。',
+            'timeline.label':'经历','timeline.title':'学术与项目经历',
+            'tl.1.title':'浙江大学 · 人工智能专业','tl.1.desc':'本科在读，主修人工智能，研究方向探索中。',
+            'team.title':'草台班子这块','team.desc':'理论与应用交叉领域的研究者和工程师团队。',
+            'projects.title':'精选研究项目与应用','projects.desc':'从医疗影像到自动驾驶，项目覆盖AI应用的全谱系。',
+            'pub.title':'学术论文','pub.desc':'精选论文与预印本。','pub.placeholder':'更多论文即将发布，敬请期待。',
+            'blog.title':'笔记与博客','blog.desc':'记录AI研究中的思考、技术深潜和学习笔记。','blog.all':'全部',
+            'contact.title':'欢迎合作与交流','contact.desc':'无论是合作、研究机会还是交流，都欢迎联系我。'
+        },
+        en: {
+            'nav.home':'Home','nav.about':'About','nav.timeline':'Timeline','nav.projects':'Projects','nav.publications':'Publications','nav.blog':'Blog','nav.contact':'Contact',
+            'hero.title':'AI research driven by<br>curiosity and purpose','hero.desc':'I\'m an undergraduate student at Zhejiang University, majoring in Artificial Intelligence. My work focuses on pushing the boundaries of deep learning, computer vision, and natural language processing.','hero.projects':'View Projects','hero.contact':'Get in Touch',
+            'about.title':'Exploring the frontiers<br>of artificial intelligence','about.desc':'Our mission is to advance AI technology and apply it to solve real-world problems.',
+            'about.dl':'Research and application of neural networks, CNNs, and RNNs, exploring the innovative boundaries of model architectures.',
+            'about.cv':'Innovation in image recognition, object detection, and image segmentation, enabling machines to truly understand the visual world.',
+            'about.ei':'Embodied intelligence research integrating perception, decision-making, and control for autonomous interaction in the physical world.',
+            'about.infra':'Building and optimizing HPC clusters, distributed training frameworks, and model deployment pipelines for large-scale AI R&D.',
+            'timeline.label':'Experience','timeline.title':'Academic & Project Experience',
+            'tl.1.title':'Zhejiang University · AI Major','tl.1.desc':'Undergraduate student, majoring in Artificial Intelligence. Exploring research directions.',
+            'team.title':'The Team','team.desc':'A team of dedicated researchers and engineers working at the intersection of theory and application.',
+            'projects.title':'Selected Projects','projects.desc':'From medical imaging to autonomous driving, our projects span the full spectrum of AI applications.',
+            'pub.title':'Publications','pub.desc':'Selected publications and preprints.','pub.placeholder':'More publications coming soon.',
+            'blog.title':'Blog & Notes','blog.desc':'Recording thoughts on AI research, technical deep-dives, and learning notes along the way.','blog.all':'All',
+            'contact.title':'Let\'s Connect','contact.desc':'Whether you\'re interested in collaboration, research opportunities, or just want to connect — I\'d love to hear from you.'
+        }
+    };
+    var currentLang = localStorage.getItem('lang') || 'en';
+    var langBtn = document.querySelector('.lang-toggle');
+    var htmlKeys = {'hero.title':1,'about.title':1,'timeline.title':1}; // keys that contain <br>
+    function applyLang(lang) {
+        var dict = i18n[lang] || i18n.zh;
+        var els = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < els.length; i++) {
+            var key = els[i].getAttribute('data-i18n');
+            if (dict[key]) {
+                if (htmlKeys[key]) els[i].innerHTML = dict[key];
+                else els[i].textContent = dict[key];
+            }
+        }
+        document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    }
+    applyLang(currentLang);
+    if (langBtn) {
+        langBtn.addEventListener('click', function() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem('lang', currentLang);
+            applyLang(currentLang);
+        });
+    }
+
+    // ===== Blog Tag Filter =====
+    var filters = document.querySelectorAll('.blog-filter');
+    var blogCards = document.querySelectorAll('.blog-card');
+    for (var f = 0; f < filters.length; f++) {
+        filters[f].addEventListener('click', function() {
+            for (var x = 0; x < filters.length; x++) filters[x].classList.remove('active');
+            this.classList.add('active');
+            var tag = this.dataset.tag;
+            for (var c = 0; c < blogCards.length; c++) {
+                var tags = blogCards[c].dataset.tags || '';
+                blogCards[c].style.display = (tag === 'all' || tags.indexOf(tag) !== -1) ? '' : 'none';
+            }
+        });
+    }
+
+    // ===== Back to Top =====
+    var btt = document.querySelector('.back-to-top');
+
+    // Merge back-to-top visibility into the existing scroll handler
+    var origOnScroll = onScroll;
+    onScroll = function() {
+        origOnScroll();
+        if (btt) btt.classList.toggle('visible', window.scrollY > 600);
+    };
+    if (btt) {
+        btt.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // ===== BibTeX Copy =====
+    var bibBtns = document.querySelectorAll('.pub-bib-btn');
+    for (var b = 0; b < bibBtns.length; b++) {
+        bibBtns[b].addEventListener('click', function() {
+            var bib = this.dataset.bib;
+            var self = this;
+            if (bib && navigator.clipboard) {
+                navigator.clipboard.writeText(bib).then(function() {
+                    var orig = self.textContent;
+                    self.textContent = 'Copied!';
+                    setTimeout(function() { self.textContent = orig; }, 1500);
+                }).catch(function() {
+                    // Fallback: select text from a temp textarea
+                    var ta = document.createElement('textarea');
+                    ta.value = bib; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                    document.body.appendChild(ta); ta.select();
+                    try { document.execCommand('copy'); self.textContent = 'Copied!'; } catch(e) {}
+                    document.body.removeChild(ta);
+                    setTimeout(function() { self.textContent = 'BibTeX'; }, 1500);
+                });
+            }
         });
     }
 
@@ -161,10 +292,12 @@
 
         var scanAngle = 0, t = 0;
         var cosY, sinY, cosX, sinX; // cached per frame
+        var _pr = { x: 0, y: 0, z: 0 }; // reused projection result
 
         function projectPt(x, y, z) {
             var x1 = x * cosY - z * sinY, z1 = x * sinY + z * cosY;
-            return { x: x1, y: y * cosX - z1 * sinX, z: y * sinX + z1 * cosX };
+            _pr.x = x1; _pr.y = y * cosX - z1 * sinX; _pr.z = y * sinX + z1 * cosX;
+            return _pr;
         }
 
         function draw() {

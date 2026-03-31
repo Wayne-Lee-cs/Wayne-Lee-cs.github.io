@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,9 +25,15 @@
         .article-content h2 { font-size: 22px; font-weight: 600; margin: 40px 0 16px; color: var(--color-text, #1a1a1a); }
         .article-content code { background: #f0ede8; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
         .article-content pre { background: #1a1a1a; color: #e0d8cf; padding: 20px; border-radius: 12px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+        [data-theme="dark"] .article { color: #9b9590; }
+        [data-theme="dark"] .article h1 { color: #e8e4df; }
+        [data-theme="dark"] .article-content h2 { color: #e8e4df; }
+        [data-theme="dark"] .article-content code { background: #2a2a2a; color: #d4a574; }
+        [data-theme="dark"] .article-back { color: #c8956c; }
     </style>
 </head>
 <body>
+    <script src="theme-init.js"></script>
     <nav class="navbar">
         <div class="nav-container">
             <a href="../index.html" class="logo">Juyang Li</a>

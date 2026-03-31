@@ -57,6 +57,48 @@
 
 - 替换根目录的 `website_head_page.jpg`，文件名保持一致即可
 
+## 添加论文 (Publications)
+
+在 `index.html` 的 `<div class="pub-list">` 里添加：
+```html
+<div class="pub-item">
+    <div class="pub-year">2026</div>
+    <div class="pub-content">
+        <h3>论文标题</h3>
+        <p class="pub-authors"><strong>J. Li</strong>, Co-author, et al.</p>
+        <p class="pub-venue">会议/期刊名, 2026</p>
+        <div class="pub-links">
+            <a href="blog/md-viewer.html?file=paper.pdf" class="pub-link">PDF</a>
+            <button class="pub-link pub-bib-btn" data-bib="@article{...}">BibTeX</button>
+        </div>
+    </div>
+</div>
+```
+
+## 添加经历 (Timeline)
+
+在 `index.html` 的 `<div class="timeline">` 里添加：
+```html
+<div class="timeline-item">
+    <div class="timeline-dot"></div>
+    <div class="timeline-date">2025.06 - 2025.09</div>
+    <div class="timeline-content">
+        <h3>实习/项目名称</h3>
+        <p>描述...</p>
+    </div>
+</div>
+```
+
+## 深色模式
+
+- 自动跟随系统设置，也可以点击导航栏的太阳/月亮图标手动切换
+- 用户选择会保存在 localStorage
+
+## 多语言
+
+- 点击导航栏的 "中/EN" 按钮切换中英文
+- 要添加新的翻译文本，在 `script.js` 的 `i18n` 对象里添加对应的 key-value
+
 ## 推送上线
 
 ```bash

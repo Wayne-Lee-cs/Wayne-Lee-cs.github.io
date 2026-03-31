@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,9 +41,32 @@
         .md-content th, .md-content td { padding: 10px 14px; border: 1px solid var(--color-border, #e8e4df); text-align: left; }
         .md-content th { background: #f5f3f0; font-weight: 600; }
         .md-content hr { border: none; border-top: 1px solid var(--color-border, #e8e4df); margin: 40px 0; }
+
+        /* Dark mode for blog content */
+        [data-theme="dark"] .md-content { color: #9b9590; }
+        [data-theme="dark"] .md-content h1,
+        [data-theme="dark"] .md-content h2,
+        [data-theme="dark"] .md-content h3 { color: #e8e4df; }
+        [data-theme="dark"] .md-content code { background: #2a2a2a; color: #d4a574; }
+        [data-theme="dark"] .md-content blockquote { background: rgba(200,149,108,0.08); }
+        [data-theme="dark"] .md-content th { background: #1e1e1e; color: #e8e4df; }
+        [data-theme="dark"] .md-content td { border-color: rgba(255,255,255,0.1); }
+        [data-theme="dark"] .md-content th { border-color: rgba(255,255,255,0.1); }
+        [data-theme="dark"] .md-content h2 { border-bottom-color: rgba(255,255,255,0.1); }
+        [data-theme="dark"] .article-back { color: #c8956c; }
+        [data-theme="dark"] .loading { color: #6b6560; }
+        @media (max-width: 480px) {
+            .article { padding: 80px 16px 40px; }
+            .md-content h1 { font-size: 26px; }
+            .md-content h2 { font-size: 20px; margin: 32px 0 12px; }
+            .md-content pre { padding: 14px; font-size: 13px; }
+            .md-content table { font-size: 12px; }
+            .md-content th, .md-content td { padding: 6px 8px; }
+        }
     </style>
 </head>
 <body>
+    <script src="theme-init.js"></script>
     <nav class="navbar">
         <div class="nav-container">
             <a href="../index.html" class="logo">Juyang Li</a>
