@@ -93,6 +93,7 @@
             var next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
+            if (typeof drawRadar === 'function') drawRadar();
         });
     }
 
@@ -434,12 +435,12 @@
 
     // ===== Terminal Hint =====
     var hint = document.getElementById('terminal-hint');
-    if (hint && !localStorage.getItem('terminal-hint-seen')) {
+    if (hint && !sessionStorage.getItem('terminal-hint-seen')) {
         setTimeout(function() { hint.classList.add('show'); }, 3000);
         setTimeout(function() {
             hint.classList.remove('show');
             hint.classList.add('hide');
-            localStorage.setItem('terminal-hint-seen', '1');
+            sessionStorage.setItem('terminal-hint-seen', '1');
         }, 8000);
     }
 

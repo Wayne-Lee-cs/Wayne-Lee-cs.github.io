@@ -746,7 +746,7 @@ a {
 
 /* ===== Skills Radar ===== */
 .skills-wrap { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
-#radar-canvas { max-width: 360px; width: 100%; height: auto; }
+#radar-canvas { width: 360px; height: 360px; }
 .skills-legend { display: flex; flex-direction: column; gap: 12px; }
 .skill-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--color-text); }
 .skill-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
@@ -901,6 +901,7 @@ a {
 }
 
 @media (max-width: 480px) {
+    #radar-canvas { width: 280px; height: 280px; }
     .hero-inner { padding: 60px 16px 32px; }
     .hero-actions { flex-direction: column; }
     .btn { width: 100%; text-align: center; }
