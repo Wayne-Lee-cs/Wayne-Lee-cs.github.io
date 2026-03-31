@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     // ===== Mobile menu toggle =====
     var toggle = document.querySelector('.mobile-toggle');
     var menu = document.querySelector('.nav-menu');
