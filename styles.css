@@ -740,7 +740,83 @@ a {
 .back-to-top.visible { opacity: 1; pointer-events: auto; }
 .back-to-top:hover { transform: translateY(-3px); }
 
-/* ===== Responsive ===== */
+/* ===== Typewriter ===== */
+.typewriter { border-right: 2px solid var(--color-accent); padding-right: 4px; }
+.typewriter.done { border-right-color: transparent; }
+
+/* ===== Skills Radar ===== */
+.skills-wrap { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+#radar-canvas { max-width: 360px; width: 100%; height: auto; }
+.skills-legend { display: flex; flex-direction: column; gap: 12px; }
+.skill-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--color-text); }
+.skill-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ===== Visitor Badge ===== */
+.visitor-badge { height: 22px; border-radius: 4px; opacity: 0.6; transition: opacity 0.2s; }
+.visitor-badge:hover { opacity: 1; }
+
+/* ===== Terminal ===== */
+.terminal-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+}
+.terminal-overlay[hidden] { display: none; }
+.terminal-window {
+    width: 100%; max-width: 640px; max-height: 80vh;
+    background: #1a1a1a; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    display: flex; flex-direction: column;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+.terminal-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; background: #252525;
+}
+.terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+.terminal-dot.red { background: #ff5f57; }
+.terminal-dot.yellow { background: #febc2e; }
+.terminal-dot.green { background: #28c840; }
+.terminal-title { margin-left: 12px; font-size: 12px; color: #666; }
+.terminal-body {
+    padding: 16px; flex: 1; overflow-y: auto;
+    font-size: 14px; line-height: 1.7; color: #ccc;
+    max-height: 50vh;
+}
+.terminal-line { margin-bottom: 4px; white-space: pre-wrap; word-break: break-word; }
+.t-cmd { color: #c8956c; }
+.t-result { color: #9b9590; }
+.t-error { color: #ff5f57; }
+.terminal-input-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; border-top: 1px solid #2a2a2a;
+}
+.terminal-prompt { color: #c8956c; font-size: 14px; font-weight: 600; }
+.terminal-input {
+    flex: 1; background: none; border: none; outline: none;
+    color: #e8e4df; font-size: 14px; font-family: inherit;
+    caret-color: #c8956c;
+}
+
+/* ===== Terminal Hint ===== */
+.terminal-hint {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(0);
+    background: var(--color-text); color: var(--color-bg);
+    padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 500;
+    z-index: 998; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    opacity: 0; transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none;
+}
+.terminal-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.terminal-hint.hide { opacity: 0; transform: translateX(-50%) translateY(10px); }
+.terminal-hint kbd {
+    display: inline-block; background: rgba(255,255,255,0.15); padding: 2px 8px;
+    border-radius: 4px; font-family: 'Consolas', monospace; font-size: 14px;
+    margin: 0 2px; border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ===== Responsive additions ===== */
 @media (max-width: 1024px) {
     .research-grid { grid-template-columns: repeat(2, 1fr); }
     .team-grid { grid-template-columns: 1fr; }
@@ -754,6 +830,9 @@ a {
 }
 
 @media (max-width: 768px) {
+    .skills-wrap { flex-direction: column; }
+    .terminal-window { max-height: 70vh; }
+    .terminal-body { max-height: 40vh; }
     /* Nav */
     .nav-menu {
         display: none;

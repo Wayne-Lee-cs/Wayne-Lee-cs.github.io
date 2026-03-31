@@ -60,7 +60,7 @@
         }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
         var fadeEls = document.querySelectorAll(
-            '.research-card, .team-card, .project-item, .contact-block, .section-title, .section-description, .timeline-item, .pub-item, .blog-card'
+            '.research-card, .team-card, .project-item, .contact-block, .section-title, .section-description, .timeline-item, .pub-item, .blog-card, .skills-wrap'
         );
         for (var k = 0; k < fadeEls.length; k++) {
             fadeEls[k].classList.add('fade-in');
@@ -100,12 +100,13 @@
     var i18n = {
         zh: {
             'nav.home':'首页','nav.about':'关于','nav.timeline':'经历','nav.projects':'项目','nav.publications':'论文','nav.blog':'博客','nav.contact':'联系',
-            'hero.title':'以好奇心和使命感<br>驱动AI研究','hero.desc':'我是浙江大学人工智能专业的本科生，专注于深度学习、计算机视觉和具身智能的前沿研究。','hero.projects':'查看项目','hero.contact':'联系我',
+            'hero.desc':'我是浙江大学人工智能专业的本科生，专注于深度学习、计算机视觉和具身智能的前沿研究。','hero.projects':'查看项目','hero.contact':'联系我',
             'about.title':'探索人工智能的<br>前沿领域','about.desc':'我们的使命是推动人工智能技术的发展，并将其应用于解决实际问题。',
             'about.dl':'神经网络、卷积神经网络和循环神经网络的研究与应用，探索模型架构的创新边界。',
             'about.cv':'图像识别、目标检测和图像分割技术的创新，让机器真正理解视觉世界。',
             'about.ei':'融合感知、决策与控制的具身智能研究，让AI在物理世界中自主交互与学习。',
             'about.infra':'高性能计算集群、分布式训练框架与模型部署流水线的构建与优化，为大规模AI研发提供坚实的基础设施支撑。',
+            'skills.label':'技能','skills.title':'技术栈',
             'timeline.label':'经历','timeline.title':'学术与项目经历',
             'tl.1.title':'浙江大学 · 人工智能专业','tl.1.desc':'本科在读，主修人工智能，研究方向探索中。',
             'team.title':'草台班子这块','team.desc':'理论与应用交叉领域的研究者和工程师团队。',
@@ -116,12 +117,13 @@
         },
         en: {
             'nav.home':'Home','nav.about':'About','nav.timeline':'Timeline','nav.projects':'Projects','nav.publications':'Publications','nav.blog':'Blog','nav.contact':'Contact',
-            'hero.title':'AI research driven by<br>curiosity and purpose','hero.desc':'I\'m an undergraduate student at Zhejiang University, majoring in Artificial Intelligence. My work focuses on pushing the boundaries of deep learning, computer vision, and natural language processing.','hero.projects':'View Projects','hero.contact':'Get in Touch',
+            'hero.desc':'I\'m an undergraduate student at Zhejiang University, majoring in Artificial Intelligence. My work focuses on pushing the boundaries of deep learning, computer vision, and natural language processing.','hero.projects':'View Projects','hero.contact':'Get in Touch',
             'about.title':'Exploring the frontiers<br>of artificial intelligence','about.desc':'Our mission is to advance AI technology and apply it to solve real-world problems.',
             'about.dl':'Research and application of neural networks, CNNs, and RNNs, exploring the innovative boundaries of model architectures.',
             'about.cv':'Innovation in image recognition, object detection, and image segmentation, enabling machines to truly understand the visual world.',
             'about.ei':'Embodied intelligence research integrating perception, decision-making, and control for autonomous interaction in the physical world.',
             'about.infra':'Building and optimizing HPC clusters, distributed training frameworks, and model deployment pipelines for large-scale AI R&D.',
+            'skills.label':'Skills','skills.title':'Tech Stack',
             'timeline.label':'Experience','timeline.title':'Academic & Project Experience',
             'tl.1.title':'Zhejiang University · AI Major','tl.1.desc':'Undergraduate student, majoring in Artificial Intelligence. Exploring research directions.',
             'team.title':'The Team','team.desc':'A team of dedicated researchers and engineers working at the intersection of theory and application.',
@@ -133,7 +135,7 @@
     };
     var currentLang = localStorage.getItem('lang') || 'en';
     var langBtn = document.querySelector('.lang-toggle');
-    var htmlKeys = {'hero.title':1,'about.title':1,'timeline.title':1}; // keys that contain <br>
+    var htmlKeys = {'about.title':1}; // keys that contain <br>
     function applyLang(lang) {
         var dict = i18n[lang] || i18n.zh;
         var els = document.querySelectorAll('[data-i18n]');
@@ -207,6 +209,238 @@
                 });
             }
         });
+    }
+
+    // ===== Typewriter Effect =====
+    var tw = document.querySelector('.typewriter');
+    if (tw) {
+        var twLang = currentLang;
+        var twLines = (tw.getAttribute('data-text-' + twLang) || tw.getAttribute('data-text-en')).split('|');
+        var twLine = 0, twChar = 0, twText = '';
+        function typeNext() {
+            if (twLine >= twLines.length) { tw.classList.add('done'); return; }
+            if (twChar <= twLines[twLine].length) {
+                twText = twLines.slice(0, twLine).join('\n') + '\n' + twLines[twLine].substring(0, twChar);
+                tw.innerHTML = twText.split('\n').join('<br>');
+                twChar++;
+                setTimeout(typeNext, 40 + Math.random() * 30);
+            } else {
+                twLine++; twChar = 0;
+                setTimeout(typeNext, 300);
+            }
+        }
+        setTimeout(typeNext, 500);
+    }
+
+    // ===== Skills Radar Chart =====
+    var radarCanvas = document.getElementById('radar-canvas');
+    if (radarCanvas) {
+        var rCtx = radarCanvas.getContext('2d');
+        var skills = [
+            { name: 'Python', value: 0.85, color: '#c8956c' },
+            { name: 'PyTorch', value: 0.65, color: '#d4a574' },
+            { name: 'C/C++', value: 0.6, color: '#a07850' },
+            { name: 'Linux', value: 0.7, color: '#b08860' },
+            { name: 'Math', value: 0.75, color: '#c0a080' },
+            { name: 'Git', value: 0.7, color: '#d0b090' }
+        ];
+        var legendEl = document.getElementById('skills-legend');
+        if (legendEl) {
+            for (var si = 0; si < skills.length; si++) {
+                var item = document.createElement('div');
+                item.className = 'skill-item';
+                var dot = document.createElement('span');
+                dot.className = 'skill-dot';
+                dot.style.background = skills[si].color;
+                var name = document.createTextNode(skills[si].name + ' ');
+                var pct = document.createElement('span');
+                pct.style.cssText = 'color:#666;margin-left:auto';
+                pct.textContent = Math.round(skills[si].value * 100) + '%';
+                item.appendChild(dot); item.appendChild(name); item.appendChild(pct);
+                legendEl.appendChild(item);
+            }
+        }
+        function drawRadar() {
+            var w = radarCanvas.width, h = radarCanvas.height;
+            var cx = w / 2, cy = h / 2, maxR = Math.min(w, h) * 0.38;
+            var n = skills.length, step = (Math.PI * 2) / n;
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            var gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+            var axisColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+            var labelColor = isDark ? 'rgba(250,249,247,0.7)' : 'rgba(25,25,25,0.6)';
+            rCtx.clearRect(0, 0, w, h);
+            // Grid rings
+            for (var ring = 1; ring <= 4; ring++) {
+                var r = maxR * (ring / 4);
+                rCtx.beginPath();
+                for (var i = 0; i <= n; i++) {
+                    var a = step * i - Math.PI / 2;
+                    var x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+                    if (i === 0) rCtx.moveTo(x, y); else rCtx.lineTo(x, y);
+                }
+                rCtx.strokeStyle = gridColor;
+                rCtx.lineWidth = 1;
+                rCtx.stroke();
+            }
+            // Axis lines
+            for (var i = 0; i < n; i++) {
+                var a = step * i - Math.PI / 2;
+                rCtx.beginPath();
+                rCtx.moveTo(cx, cy);
+                rCtx.lineTo(cx + Math.cos(a) * maxR, cy + Math.sin(a) * maxR);
+                rCtx.strokeStyle = axisColor;
+                rCtx.stroke();
+            }
+            // Data polygon
+            rCtx.beginPath();
+            for (var i = 0; i < n; i++) {
+                var a = step * i - Math.PI / 2;
+                var r = maxR * skills[i].value;
+                var x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+                if (i === 0) rCtx.moveTo(x, y); else rCtx.lineTo(x, y);
+            }
+            rCtx.closePath();
+            rCtx.fillStyle = 'rgba(200,149,108,0.15)';
+            rCtx.fill();
+            rCtx.strokeStyle = 'rgba(200,149,108,0.6)';
+            rCtx.lineWidth = 2;
+            rCtx.stroke();
+            // Data points + labels
+            for (var i = 0; i < n; i++) {
+                var a = step * i - Math.PI / 2;
+                var r = maxR * skills[i].value;
+                var x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+                rCtx.beginPath();
+                rCtx.arc(x, y, 4, 0, 6.28);
+                rCtx.fillStyle = skills[i].color;
+                rCtx.fill();
+                // Label
+                var lx = cx + Math.cos(a) * (maxR + 20), ly = cy + Math.sin(a) * (maxR + 20);
+                rCtx.fillStyle = labelColor;
+                rCtx.font = '12px Inter, sans-serif';
+                rCtx.textAlign = 'center';
+                rCtx.textBaseline = 'middle';
+                rCtx.fillText(skills[i].name, lx, ly);
+            }
+        }
+        drawRadar();
+    }
+
+    // ===== Konami Code Easter Egg =====
+    var konamiSeq = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right B A
+    var konamiIdx = 0;
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode === konamiSeq[konamiIdx]) {
+            konamiIdx++;
+            if (konamiIdx === konamiSeq.length) {
+                konamiIdx = 0;
+                showEasterEgg();
+            }
+        } else {
+            konamiIdx = 0;
+        }
+    });
+    function showEasterEgg() {
+        var egg = document.createElement('div');
+        egg.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);cursor:pointer;animation:fadeInUp 0.4s ease';
+        var inner = document.createElement('div');
+        inner.style.textAlign = 'center';
+        inner.style.color = '#faf9f7';
+        var emoji = document.createElement('div');
+        emoji.style.cssText = 'font-size:80px;margin-bottom:20px';
+        emoji.textContent = '🎮';
+        var h = document.createElement('h2');
+        h.style.cssText = 'font-family:Georgia,serif;font-size:32px;font-weight:400;margin-bottom:12px';
+        h.textContent = 'You found the secret!';
+        var p1 = document.createElement('p');
+        p1.style.cssText = 'color:#9b9590;font-size:16px';
+        p1.textContent = 'Konami Code activated. You\'re a true gamer.';
+        var p2 = document.createElement('p');
+        p2.style.cssText = 'color:#c8956c;font-size:14px;margin-top:24px';
+        p2.textContent = 'Click anywhere to close';
+        inner.appendChild(emoji); inner.appendChild(h); inner.appendChild(p1); inner.appendChild(p2);
+        egg.appendChild(inner);
+        egg.addEventListener('click', function() { egg.remove(); });
+        document.body.appendChild(egg);
+    }
+
+    // ===== Terminal Mode (press ~ to toggle) =====
+    var terminalEl = document.getElementById('terminal');
+    var terminalInput = document.getElementById('terminal-input');
+    var terminalOutput = document.getElementById('terminal-output');
+    if (terminalEl && terminalInput && terminalOutput) {
+        var termCmds = {
+            help: 'Available commands:\n  about    - About me\n  skills   - My tech stack\n  projects - List projects\n  blog     - Go to blog\n  contact  - Contact info\n  theme    - Toggle dark mode\n  clear    - Clear terminal\n  exit     - Close terminal',
+            about: 'Juyang Li\nUndergraduate @ Zhejiang University\nMajor: Artificial Intelligence\nInterests: Deep Learning, Computer Vision, Embodied AI',
+            skills: 'Python ████████░░ 85%\nPyTorch █████░░░░░ 65%\nC/C++  ██████░░░░ 60%\nLinux  ███████░░░ 70%\nMath   ████████░░ 75%\nGit    ███████░░░ 70%',
+            projects: '1. 智能医疗影像诊断\n2. 具身智能操控系统\n3. 自动驾驶感知系统\n4. 虚拟助手大模型\n5. 推荐系统引擎\n6. 异常检测平台',
+            contact: 'Email: lijuyang@zju.edu.cn\nGitHub: github.com/Wayne-Lee-cs',
+            clear: '__clear__',
+            exit: '__exit__',
+            blog: '__nav__#blog',
+            theme: '__theme__'
+        };
+        function termAddLine(text, cls) {
+            var lines = text.split('\n');
+            for (var i = 0; i < lines.length; i++) {
+                var div = document.createElement('div');
+                div.className = 'terminal-line' + (cls ? ' ' + cls : '');
+                div.textContent = lines[i];
+                terminalOutput.appendChild(div);
+            }
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+        function termExec(cmd) {
+            cmd = cmd.trim().toLowerCase();
+            termAddLine('$ ' + cmd, 't-cmd');
+            if (!cmd) return;
+            var result = termCmds[cmd];
+            if (!result) { termAddLine('Command not found: ' + cmd + '. Type "help" for available commands.', 't-error'); return; }
+            if (result === '__clear__') { terminalOutput.innerHTML = ''; return; }
+            if (result === '__exit__') { terminalEl.hidden = true; document.body.style.overflow = ''; return; }
+            if (result === '__theme__') {
+                var cur = document.documentElement.getAttribute('data-theme');
+                var next = cur === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                termAddLine('Theme switched to ' + next, 't-result');
+                return;
+            }
+            if (result.indexOf('__nav__') === 0) {
+                terminalEl.hidden = true; document.body.style.overflow = '';
+                window.location.hash = result.replace('__nav__', '');
+                return;
+            }
+            termAddLine(result, 't-result');
+        }
+        terminalInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { termExec(this.value); this.value = ''; }
+            if (e.key === 'Escape') { terminalEl.hidden = true; document.body.style.overflow = ''; }
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '`' && !e.ctrlKey && !e.altKey && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                if (terminalEl.hidden) {
+                    terminalEl.hidden = false;
+                    document.body.style.overflow = 'hidden';
+                    terminalInput.focus();
+                } else {
+                    terminalEl.hidden = true;
+                    document.body.style.overflow = '';
+                }
+            }
+        });
+    }
+
+    // ===== Terminal Hint =====
+    var hint = document.getElementById('terminal-hint');
+    if (hint && !localStorage.getItem('terminal-hint-seen')) {
+        setTimeout(function() { hint.classList.add('show'); }, 3000);
+        setTimeout(function() {
+            hint.classList.remove('show');
+            hint.classList.add('hide');
+            localStorage.setItem('terminal-hint-seen', '1');
+        }, 8000);
     }
 
     // ===== Optimized Canvas Animation =====
@@ -344,7 +578,7 @@
             // Sort by depth (in-place)
             projected.sort(function(a, b) { return a.z - b.z; });
 
-            // Draw connections 鈥?batch into single path per alpha range
+            // Draw connections —batch into single path per alpha range
             ctx.lineWidth = 0.5;
             var threshold = R * 0.3;
             for (var i = 0; i < projected.length; i++) {
@@ -363,7 +597,7 @@
                 }
             }
 
-            // Scan beam 鈥?only check front-facing points
+            // Scan beam —only check front-facing points
             var scanX = Math.cos(scanAngle), scanZ = Math.sin(scanAngle);
             for (var i = 0; i < projected.length; i++) {
                 var p = projected[i];
@@ -405,7 +639,7 @@
                 ctx.stroke();
             }
 
-            // Draw points 鈥?skip glow for back-facing, reduce gradient calls
+            // Draw points —skip glow for back-facing, reduce gradient calls
             for (var i = 0; i < projected.length; i++) {
                 var p = projected[i];
                 var depth = (p.z + 1) * 0.5;
@@ -436,7 +670,7 @@
             animId = requestAnimationFrame(draw);
         }
 
-        // Visibility API 鈥?pause animation when tab is hidden
+        // Visibility API —pause animation when tab is hidden
         document.addEventListener('visibilitychange', function() {
             isVisible = !document.hidden;
             if (isVisible && !animId) {
@@ -458,3 +692,4 @@
         }
     }
 });
+

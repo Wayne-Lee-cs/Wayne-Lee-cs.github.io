@@ -8,7 +8,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <!-- Open Graph -->
     <meta property="og:title" content="Juyang Li · Zhejiang University">
@@ -74,7 +74,7 @@
         <div class="hero-inner">
             <div class="hero-content">
                 <p class="hero-eyebrow">Zhejiang University · Artificial Intelligence</p>
-                <h1 class="hero-title" data-i18n="hero.title">AI research driven by<br>curiosity and purpose</h1>
+                <h1 class="hero-title" data-i18n="hero.title"><span class="typewriter" data-text-en="AI research driven by|curiosity and purpose" data-text-zh="以好奇心和使命感|驱动AI研究"></span></h1>
                 <p class="hero-description" data-i18n="hero.desc">I'm an undergraduate student at Zhejiang University, majoring in Artificial Intelligence. My work focuses on pushing the boundaries of deep learning, computer vision, and natural language processing.</p>
                 <div class="hero-actions">
                     <a href="#projects" class="btn btn-primary" data-i18n="hero.projects">View Projects</a>
@@ -116,6 +116,20 @@
                     <h3>AI Infrastructure</h3>
                     <p data-i18n="about.infra">高性能计算集群、分布式训练框架与模型部署流水线的构建与优化，为大规模AI研发提供坚实的基础设施支撑。</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section section-light">
+        <div class="container">
+            <div class="section-label" data-i18n="skills.label">Skills</div>
+            <h2 class="section-title" data-i18n="skills.title">技术栈</h2>
+        </div>
+        <div class="container">
+            <div class="skills-wrap">
+                <canvas id="radar-canvas" width="400" height="400" aria-hidden="true"></canvas>
+                <div class="skills-legend" id="skills-legend"></div>
             </div>
         </div>
     </section>
@@ -275,9 +289,32 @@
     <footer class="footer">
         <div class="container footer-inner">
             <span class="footer-logo">Juyang Li</span>
+            <img src="https://visitor-badge.laobi.icu/badge?page_id=wayne-lee-cs.github.io" alt="visitors" class="visitor-badge" loading="lazy">
             <p>&copy; 2026 Juyang Li, Zhejiang University. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Terminal Mode (press ~ to toggle) -->
+    <div class="terminal-overlay" id="terminal" hidden>
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span>
+                <span class="terminal-title">juyang@zju ~ press Esc to close</span>
+            </div>
+            <div class="terminal-body" id="terminal-output">
+                <div class="terminal-line">Welcome! Type <span class="t-cmd">help</span> for available commands.</div>
+            </div>
+            <div class="terminal-input-row">
+                <span class="terminal-prompt">$</span>
+                <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminal hint -->
+    <div class="terminal-hint" id="terminal-hint">
+        Press <kbd>`</kbd> to open terminal mode
+    </div>
 
     <!-- Back to top -->
     <button class="back-to-top" aria-label="Back to top" title="Back to top">
