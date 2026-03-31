@@ -85,6 +85,14 @@
                 }
             }
             container.innerHTML = div.innerHTML;
+            // Wrap tables for mobile horizontal scroll
+            var tables = container.querySelectorAll('table');
+            for (var t = 0; t < tables.length; t++) {
+                var wrap = document.createElement('div');
+                wrap.className = 'table-wrap';
+                tables[t].parentNode.insertBefore(wrap, tables[t]);
+                wrap.appendChild(tables[t]);
+            }
             // Secure external links
             var links = container.querySelectorAll('a');
             for (var i = 0; i < links.length; i++) {

@@ -816,6 +816,10 @@ a {
     margin: 0 2px; border: 1px solid rgba(255,255,255,0.2);
 }
 
+/* ===== Table responsive wrapper ===== */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 24px 0; }
+.table-wrap table { margin: 0; }
+
 /* ===== Responsive additions ===== */
 @media (max-width: 1024px) {
     .research-grid { grid-template-columns: repeat(2, 1fr); }
@@ -833,6 +837,7 @@ a {
     .skills-wrap { flex-direction: column; }
     .terminal-window { max-height: 70vh; }
     .terminal-body { max-height: 40vh; }
+    .terminal-hint { display: none; }
     /* Nav */
     .nav-menu {
         display: none;

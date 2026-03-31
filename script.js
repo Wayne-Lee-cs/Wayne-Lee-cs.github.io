@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // ===== Back to Top =====
+    var btt = document.querySelector('.back-to-top');
+
     // ===== Throttled scroll handler (single handler, 16ms throttle) =====
     var sections = document.querySelectorAll('section');
     var navLinks = document.querySelectorAll('.nav-link');
@@ -39,6 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Navbar border
         navbar.style.borderBottomColor = sy > 10 ? 'var(--color-border)' : 'transparent';
+
+        // Back to top visibility
+        if (btt) btt.classList.toggle('visible', sy > 600);
     }
 
     window.addEventListener('scroll', function() {
@@ -155,6 +161,15 @@ document.addEventListener('DOMContentLoaded', function () {
             currentLang = currentLang === 'zh' ? 'en' : 'zh';
             localStorage.setItem('lang', currentLang);
             applyLang(currentLang);
+            // Re-run typewriter with new language
+            if (tw) {
+                tw.classList.remove('done');
+                twLang = currentLang;
+                twLines = (tw.getAttribute('data-text-' + twLang) || tw.getAttribute('data-text-en')).split('|');
+                twLine = 0; twChar = 0; twText = '';
+                tw.innerHTML = '';
+                typeNext();
+            }
         });
     }
 
@@ -173,15 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ===== Back to Top =====
-    var btt = document.querySelector('.back-to-top');
-
-    // Merge back-to-top visibility into the existing scroll handler
-    var origOnScroll = onScroll;
-    onScroll = function() {
-        origOnScroll();
-        if (btt) btt.classList.toggle('visible', window.scrollY > 600);
-    };
+    // ===== Back to Top click handler =====
     if (btt) {
         btt.addEventListener('click', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -237,6 +244,13 @@ document.addEventListener('DOMContentLoaded', function () {
     var radarCanvas = document.getElementById('radar-canvas');
     if (radarCanvas) {
         var rCtx = radarCanvas.getContext('2d');
+        var radarDpr = Math.min(window.devicePixelRatio || 1, 2);
+        var radarLogicalW = 400, radarLogicalH = 400;
+        radarCanvas.width = radarLogicalW * radarDpr;
+        radarCanvas.height = radarLogicalH * radarDpr;
+        radarCanvas.style.width = radarLogicalW + 'px';
+        radarCanvas.style.height = radarLogicalH + 'px';
+        rCtx.setTransform(radarDpr, 0, 0, radarDpr, 0, 0);
         var skills = [
             { name: 'Python', value: 0.85, color: '#c8956c' },
             { name: 'PyTorch', value: 0.65, color: '#d4a574' },
@@ -262,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         function drawRadar() {
-            var w = radarCanvas.width, h = radarCanvas.height;
+            var w = radarLogicalW, h = radarLogicalH;
             var cx = w / 2, cy = h / 2, maxR = Math.min(w, h) * 0.38;
             var n = skills.length, step = (Math.PI * 2) / n;
             var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -389,10 +403,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 div.textContent = lines[i];
                 terminalOutput.appendChild(div);
             }
+            // Cap terminal output to 200 lines to prevent DOM bloat
+            while (terminalOutput.children.length > 200) {
+                terminalOutput.removeChild(terminalOutput.firstChild);
+            }
             terminalOutput.scrollTop = terminalOutput.scrollHeight;
         }
         function termExec(cmd) {
             cmd = cmd.trim().toLowerCase();
+            // Limit input length to prevent abuse
+            if (cmd.length > 100) {
+                termAddLine('$ ' + cmd.substring(0, 100) + '...', 't-cmd');
+                termAddLine('Input too long.', 't-error');
+                return;
+            }
             termAddLine('$ ' + cmd, 't-cmd');
             if (!cmd) return;
             var result = termCmds[cmd];
@@ -461,6 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
             canvas.width = rw * dpr; canvas.height = rh * dpr;
             canvas.style.width = rw + 'px'; canvas.style.height = rh + 'px';
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            cachedBg = null; // invalidate cached gradient
         }
         resize();
         window.addEventListener('resize', function() {
@@ -476,9 +501,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { passive: true });
         canvas.parentElement.addEventListener('mouseleave', function() { mouseX = 0; mouseY = 0; });
 
-        // Reduced point count for performance (250 instead of 500)
+        // Reduced point count for performance (mobile-aware)
+        var isMobile = window.innerWidth <= 768;
         var points = [];
-        var latLines = 10, lonLines = 16, totalPts = 250;
+        var latLines = isMobile ? 7 : 10, lonLines = isMobile ? 10 : 16, totalPts = isMobile ? 120 : 250;
         for (var i = 0; i <= latLines; i++) {
             var phi = (Math.PI / latLines) * i;
             var ptsInRing = Math.max(3, Math.round(Math.sin(phi) * lonLines));
@@ -511,9 +537,10 @@ document.addEventListener('DOMContentLoaded', function () {
             projected[p] = { px: 0, py: 0, z: 0, size: 0, pulse: 0, ox: 0, oz: 0 };
         }
 
-        // Reduced streams
+        // Reduced streams (fewer on mobile)
         var streams = [];
-        for (var s = 0; s < 8; s++) {
+        var streamCount = isMobile ? 4 : 8;
+        for (var s = 0; s < streamCount; s++) {
             streams.push({
                 startPhi: Math.acos(2 * Math.random() - 1),
                 startTheta: Math.random() * 6.28,
@@ -528,6 +555,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var scanAngle = 0, t = 0;
         var cosY, sinY, cosX, sinX; // cached per frame
         var _pr = { x: 0, y: 0, z: 0 }; // reused projection result
+        var cachedBg = null, cachedBgR = 0, cachedBgCx = 0; // cached background gradient
 
         function projectPt(x, y, z) {
             var x1 = x * cosY - z * sinY, z1 = x * sinY + z * cosY;
@@ -554,12 +582,15 @@ document.addEventListener('DOMContentLoaded', function () {
             var R = Math.min(rw, rh) * 0.36;
             scanAngle += 0.015;
 
-            // Background glow (single gradient, reuse)
-            var bg = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.8);
-            bg.addColorStop(0, 'rgba(200,149,108,0.05)');
-            bg.addColorStop(0.5, 'rgba(140,100,70,0.02)');
-            bg.addColorStop(1, 'transparent');
-            ctx.fillStyle = bg;
+            // Background glow (cached, only recreate on resize)
+            if (!cachedBg || cachedBgR !== R || cachedBgCx !== cx) {
+                cachedBg = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.8);
+                cachedBg.addColorStop(0, 'rgba(200,149,108,0.05)');
+                cachedBg.addColorStop(0.5, 'rgba(140,100,70,0.02)');
+                cachedBg.addColorStop(1, 'transparent');
+                cachedBgR = R; cachedBgCx = cx;
+            }
+            ctx.fillStyle = cachedBg;
             ctx.fillRect(0, 0, rw, rh);
 
             // Project points (reuse objects, no allocation)
@@ -576,10 +607,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 proj.oz = pt.oz;
             }
 
-            // Sort by depth (in-place)
-            projected.sort(function(a, b) { return a.z - b.z; });
-
-            // Draw connections —batch into single path per alpha range
+            // Draw connections (no per-frame sort needed — points are translucent)
             ctx.lineWidth = 0.5;
             var threshold = R * 0.3;
             for (var i = 0; i < projected.length; i++) {
@@ -598,19 +626,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Scan beam —only check front-facing points
+            // Scan beam — simple highlight for front-facing points (no gradient per point)
             var scanX = Math.cos(scanAngle), scanZ = Math.sin(scanAngle);
+            ctx.fillStyle = 'rgba(255,200,120,0.12)';
             for (var i = 0; i < projected.length; i++) {
                 var p = projected[i];
-                if (p.z < 0) continue; // skip back-facing
+                if (p.z < 0) continue;
                 var dot = p.ox * scanX + p.oz * scanZ;
                 if (dot > 0.95) {
-                    var glow = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, 10);
-                    glow.addColorStop(0, 'rgba(255,200,120,' + (0.25 * (p.z + 1) * 0.5) + ')');
-                    glow.addColorStop(1, 'transparent');
-                    ctx.fillStyle = glow;
                     ctx.beginPath();
-                    ctx.arc(p.px, p.py, 10, 0, 6.28);
+                    ctx.arc(p.px, p.py, 8, 0, 6.28);
                     ctx.fill();
                 }
             }

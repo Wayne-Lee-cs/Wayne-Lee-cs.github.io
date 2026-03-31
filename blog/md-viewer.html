@@ -37,7 +37,8 @@
         .md-content blockquote p { margin-bottom: 0; color: var(--color-text-secondary, #6b6560); }
         .md-content ul, .md-content ol { margin: 16px 0; padding-left: 24px; }
         .md-content li { margin-bottom: 8px; }
-        .md-content table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+        .md-content .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 24px 0; }
+        .md-content table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 400px; }
         .md-content th, .md-content td { padding: 10px 14px; border: 1px solid var(--color-border, #e8e4df); text-align: left; }
         .md-content th { background: #f5f3f0; font-weight: 600; }
         .md-content hr { border: none; border-top: 1px solid var(--color-border, #e8e4df); margin: 40px 0; }
@@ -66,10 +67,16 @@
     </style>
 </head>
 <body>
-    <script src="theme-init.js"></script>
+    <script src="../theme-init.js"></script>
     <nav class="navbar">
         <div class="nav-container">
             <a href="../index.html" class="logo">Juyang Li</a>
+            <div class="nav-actions">
+                <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
+                    <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -78,7 +85,19 @@
         <div id="content" class="loading">Loading...</div>
     </article>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js" crossorigin="anonymous"></script>
+    <script>
+    // Theme toggle for blog pages
+    var themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', function() {
+            var current = document.documentElement.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        });
+    }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js" integrity="sha384-H+hy9ULve6xfxRkWIh/YOttvDdpXgV2fmAGQkIDTxIgZwNoaBall14Di2YTMR6MzR" crossorigin="anonymous"></script>
     <script src="md-viewer.js"></script>
 </body>
 </html>
