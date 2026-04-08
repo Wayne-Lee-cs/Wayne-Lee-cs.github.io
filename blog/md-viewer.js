@@ -1,3 +1,15 @@
+/**
+ * Markdown/PDF Viewer
+ * ===================
+ * Purpose: Render markdown files and PDF documents in the browser
+ * Usage: md-viewer.html?file=path/to/file.md
+ * Dependencies: marked.js (loaded from cdn.jsdelivr.net)
+ *
+ * Security:
+ * - Filename sanitization blocks path traversal (.., /, \) and length limits
+ * - Markdown output sanitized: removes dangerous tags and event handlers
+ * - External links get rel="noopener noreferrer" and target="_blank"
+ */
 (function() {
     var params = new URLSearchParams(window.location.search);
     var file = params.get('file');
@@ -11,8 +23,16 @@
         return;
     }
 
-    // Sanitize: only allow safe filenames
-    if (file.includes('..') || file.includes('/') || file.includes('\\') || file.length > 200) {
+    // Sanitize: allow subdirectory paths but block parent traversal
+    // Allowed: hello-world.md, posts/hello.md, posts/2026/hello.md
+    // Blocked: ../etc/passwd, /etc/passwd, null bytes, path traversal
+    if (file.includes('..') || file.startsWith('/') || file.includes('\\') || file.includes('\0') || file.length > 200) {
+        container.className = 'error';
+        container.textContent = 'Invalid file path.';
+        return;
+    }
+    // Ensure path doesn't escape blog directory (defense in depth)
+    if (file.startsWith('.') || file.includes('..')) {
         container.className = 'error';
         container.textContent = 'Invalid file path.';
         return;
@@ -30,11 +50,21 @@
 
     if (ext === 'pdf') {
         container.className = '';
-        var safeFile = encodeURIComponent(file);
-        container.innerHTML = '<object data="' + safeFile +
-            '" type="application/pdf" width="100%" style="height:85vh;border-radius:12px;border:1px solid #e8e4df;">' +
-            '<p>Your browser does not support PDF viewing. <a href="' +
-            safeFile + '">Download PDF</a></p></object>';
+        // Use DOM API to safely set attributes (prevents XSS from quote injection)
+        var obj = document.createElement('object');
+        obj.setAttribute('data', file);
+        obj.setAttribute('type', 'application/pdf');
+        obj.setAttribute('width', '100%');
+        obj.style.cssText = 'height:85vh;border-radius:12px;border:1px solid #e8e4df;';
+        var p = document.createElement('p');
+        p.textContent = 'Your browser does not support PDF viewing. ';
+        var a = document.createElement('a');
+        a.href = file;
+        a.textContent = 'Download PDF';
+        p.appendChild(a);
+        obj.appendChild(p);
+        container.innerHTML = '';
+        container.appendChild(obj);
         return;
     }
 

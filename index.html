@@ -8,7 +8,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <!-- Open Graph -->
     <meta property="og:title" content="Juyang Li · Zhejiang University">
@@ -19,6 +19,10 @@
     <meta name="twitter:card" content="summary_large_image">
     <title>Juyang Li · Zhejiang University</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://giscus.app" crossorigin>
+    <link rel="dns-prefetch" href="https://giscus.app">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="website_head_page.jpg" type="image/jpeg">
     <!-- Structured Data -->
@@ -42,6 +46,7 @@
     </script>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <script src="theme-init.js"></script>
     <!-- Navigation -->
     <nav class="navbar">
@@ -70,7 +75,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section id="home" class="hero" tabindex="-1">
         <div class="hero-inner">
             <div class="hero-content">
                 <p class="hero-eyebrow">Zhejiang University · Artificial Intelligence</p>
@@ -220,7 +225,7 @@
                         <p class="pub-venue">Conference / Journal Name, 2026</p>
                         <div class="pub-links">
                             <a href="#" class="pub-link">PDF</a>
-                            <button class="pub-link pub-bib-btn" data-bib="@article{li2026sample,&#10;  title={Sample Paper Title},&#10;  author={Li, Juyang and Zhang, Z},&#10;  journal={Conference Name},&#10;  year={2026}&#10;}">BibTeX</button>
+                            <button class="pub-link pub-bib-btn" data-bib-id="li2026sample">BibTeX</button>
                         </div>
                     </div>
                 </div>
@@ -281,6 +286,18 @@
                         <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comments Section -->
+    <section id="comments" class="section section-light">
+        <div class="container">
+            <div class="section-label" data-i18n="comments.label">Discussion</div>
+            <h2 class="section-title" data-i18n="comments.title">留言板</h2>
+            <p class="section-description" data-i18n="comments.desc">使用 GitHub 账号登录后即可留言。</p>
+            <div class="giscus-wrapper">
+                <div class="giscus" id="giscus-container"></div>
             </div>
         </div>
     </section>

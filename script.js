@@ -1,3 +1,24 @@
+/**
+ * Juyang Li Personal Website - Main Script
+ * =========================================
+ * Architecture:
+ * - All code runs after DOMContentLoaded for safe DOM access
+ * - Uses vanilla JS (no framework dependencies)
+ * - i18n system with zh/en dictionaries
+ * - Canvas animations pause when not visible (performance)
+ * - Terminal mode with command system
+ *
+ * Key Functions:
+ * - applyLang(lang) - Apply i18n translations to [data-i18n] elements
+ * - drawRadar() - Render skills radar chart
+ * - draw() - Neural canvas animation loop
+ *
+ * External Dependencies:
+ * - Inter font (Google Fonts)
+ * - marked.js (cdn.jsdelivr.net) - Blog markdown rendering
+ * - Giscus (giscus.app) - Comments system
+ */
+
 document.addEventListener('DOMContentLoaded', function () {
     // ===== Mobile menu toggle =====
     var toggle = document.querySelector('.mobile-toggle');
@@ -120,7 +141,8 @@ document.addEventListener('DOMContentLoaded', function () {
             'projects.title':'精选研究项目与应用','projects.desc':'从医疗影像到自动驾驶，项目覆盖AI应用的全谱系。',
             'pub.title':'学术论文','pub.desc':'精选论文与预印本。','pub.placeholder':'更多论文即将发布，敬请期待。',
             'blog.title':'笔记与博客','blog.desc':'记录AI研究中的思考、技术深潜和学习笔记。','blog.all':'全部',
-            'contact.title':'欢迎合作与交流','contact.desc':'无论是合作、研究机会还是交流，都欢迎联系我。'
+            'contact.title':'欢迎合作与交流','contact.desc':'无论是合作、研究机会还是交流，都欢迎联系我。',
+            'comments.label':'讨论','comments.title':'留言板','comments.desc':'使用 GitHub 账号登录后即可留言。'
         },
         en: {
             'nav.home':'Home','nav.about':'About','nav.timeline':'Timeline','nav.projects':'Projects','nav.publications':'Publications','nav.blog':'Blog','nav.contact':'Contact',
@@ -137,7 +159,8 @@ document.addEventListener('DOMContentLoaded', function () {
             'projects.title':'Selected Projects','projects.desc':'From medical imaging to autonomous driving, our projects span the full spectrum of AI applications.',
             'pub.title':'Publications','pub.desc':'Selected publications and preprints.','pub.placeholder':'More publications coming soon.',
             'blog.title':'Blog & Notes','blog.desc':'Recording thoughts on AI research, technical deep-dives, and learning notes along the way.','blog.all':'All',
-            'contact.title':'Let\'s Connect','contact.desc':'Whether you\'re interested in collaboration, research opportunities, or just want to connect — I\'d love to hear from you.'
+            'contact.title':'Let\'s Connect','contact.desc':'Whether you\'re interested in collaboration, research opportunities, or just want to connect — I\'d love to hear from you.',
+            'comments.label':'Discussion','comments.title':'Leave a Comment','comments.desc':'Sign in with GitHub to join the discussion.'
         }
     };
     var currentLang = localStorage.getItem('lang') || 'en';
@@ -196,27 +219,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ===== BibTeX Copy =====
+    var bibData = {
+        'li2026sample': '@article{li2026sample,\n  title={Sample Paper Title},\n  author={Li, Juyang and Zhang, Z},\n  journal={Conference Name},\n  year={2026}\n}'
+    };
     var bibBtns = document.querySelectorAll('.pub-bib-btn');
     for (var b = 0; b < bibBtns.length; b++) {
-        bibBtns[b].addEventListener('click', function() {
-            var bib = this.dataset.bib;
-            var self = this;
-            if (bib && navigator.clipboard) {
-                navigator.clipboard.writeText(bib).then(function() {
-                    var orig = self.textContent;
-                    self.textContent = 'Copied!';
-                    setTimeout(function() { self.textContent = orig; }, 1500);
-                }).catch(function() {
-                    // Fallback: select text from a temp textarea
-                    var ta = document.createElement('textarea');
-                    ta.value = bib; ta.style.position = 'fixed'; ta.style.opacity = '0';
-                    document.body.appendChild(ta); ta.select();
-                    try { document.execCommand('copy'); self.textContent = 'Copied!'; } catch(e) {}
-                    document.body.removeChild(ta);
-                    setTimeout(function() { self.textContent = 'BibTeX'; }, 1500);
-                });
-            }
-        });
+        bibBtns[b].addEventListener('click', (function(btn) {
+            return function() {
+                var bibId = btn.dataset.bibId;
+                var bib = bibData[bibId];
+                if (bib && navigator.clipboard) {
+                    navigator.clipboard.writeText(bib).then(function() {
+                        var orig = btn.textContent;
+                        btn.textContent = 'Copied!';
+                        setTimeout(function() { btn.textContent = orig; }, 1500);
+                    }).catch(function() {
+                        var ta = document.createElement('textarea');
+                        ta.value = bib; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                        document.body.appendChild(ta); ta.select();
+                        try { document.execCommand('copy'); btn.textContent = 'Copied!'; } catch(e) {}
+                        document.body.removeChild(ta);
+                        setTimeout(function() { btn.textContent = 'BibTeX'; }, 1500);
+                    });
+                }
+            };
+        })(bibBtns[b]));
     }
 
     // ===== Typewriter Effect =====
@@ -415,6 +442,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (cmd.length > 100) {
                 termAddLine('$ ' + cmd.substring(0, 100) + '...', 't-cmd');
                 termAddLine('Input too long.', 't-error');
+                return;
+            }
+            // Sanitize: only allow safe characters
+            if (!/^[a-z0-9\s\-_]+$/.test(cmd)) {
+                termAddLine('$ ' + cmd, 't-cmd');
+                termAddLine('Invalid characters.', 't-error');
                 return;
             }
             termAddLine('$ ' + cmd, 't-cmd');
@@ -717,5 +750,62 @@ document.addEventListener('DOMContentLoaded', function () {
             animId = requestAnimationFrame(draw);
         }
     }
+
+    // ===== Giscus Comments =====
+    (function() {
+        // Giscus config - visit https://giscus.app to get your IDs
+        // 1. Go to https://giscus.app
+        // 2. Select your repo and discussion category
+        // 3. Copy the generated config values below
+        var GISCUS_REPO = 'Wayne-Lee-cs/Wayne-Lee-cs.github.io';
+        var GISCUS_REPO_ID = 'R_kgDORxTLNQ';        // e.g. 'R_kgDO...'
+        var GISCUS_CATEGORY = 'Guestbook';
+        var GISCUS_CATEGORY_ID = 'DIC_kwDORxTLNc4C5wG2'; // e.g. 'DIC_kwDO...'
+
+        var container = document.getElementById('giscus-container');
+        if (!container) return;
+
+        // If not configured, show placeholder message
+        if (GISCUS_REPO_ID === 'YOUR_REPO_ID') {
+            container.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--color-text-tertiary);font-size:14px;background:var(--color-bg-secondary);border-radius:12px;border:1px dashed var(--color-border)">To enable comments, configure Giscus at <a href="https://giscus.app" target="_blank" rel="noopener" style="color:var(--color-accent)">giscus.app</a> and add your repo/category IDs to script.js</div>';
+            return;
+        }
+
+        function loadGiscus(theme) {
+            // Remove existing script to re-render with new theme
+            var existing = container.querySelector('script');
+            if (existing) existing.remove();
+
+            var script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.setAttribute('data-repo', GISCUS_REPO);
+            script.setAttribute('data-repo-id', GISCUS_REPO_ID);
+            script.setAttribute('data-category', GISCUS_CATEGORY);
+            script.setAttribute('data-category-id', GISCUS_CATEGORY_ID);
+            script.setAttribute('data-mapping', 'pathname');
+            script.setAttribute('data-strict', '0');
+            script.setAttribute('data-reactions-enabled', '1');
+            script.setAttribute('data-emit-metadata', '0');
+            script.setAttribute('data-input-position', 'bottom');
+            script.setAttribute('data-theme', 'preferred_color_scheme');
+            script.setAttribute('data-lang', 'zh-CN');
+            script.setAttribute('data-crossorigin', 'anonymous');
+            script.async = true;
+            container.appendChild(script);
+        }
+
+        // Load with current theme
+        var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        loadGiscus(currentTheme);
+
+        // Listen for theme changes and update Giscus
+        var themeBtn = document.querySelector('.theme-toggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', function() {
+                var newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                loadGiscus(newTheme);
+            });
+        }
+    })();
 });
 
