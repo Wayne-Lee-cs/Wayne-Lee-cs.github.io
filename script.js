@@ -504,7 +504,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // ===== Optimized Canvas Animation =====
     var canvas = document.getElementById('neural-canvas');
     if (canvas) {
-        var ctx = canvas.getContext('2d');
+        // Respect prefers-reduced-motion
+        var skipAnimation = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (skipAnimation) {
+            // Draw a single static frame instead
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+        }
+
+        var ctx = canvas.getContext('2d', { powerPreference: 'high-performance' });
         var rw, rh, animId = null, isVisible = true;
         var dpr = Math.min(window.devicePixelRatio || 1, 2);
         var mouseX = 0, mouseY = 0;
@@ -534,10 +542,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { passive: true });
         canvas.parentElement.addEventListener('mouseleave', function() { mouseX = 0; mouseY = 0; });
 
-        // Reduced point count for performance (mobile-aware)
+        // Performance-adaptive point count
         var isMobile = window.innerWidth <= 768;
+        var isLowEnd = (navigator.hardwareConcurrency || 4) <= 4;
+        var quality = isMobile || isLowEnd ? 'low' : 'high';
         var points = [];
-        var latLines = isMobile ? 7 : 10, lonLines = isMobile ? 10 : 16, totalPts = isMobile ? 120 : 250;
+        var latLines, lonLines, totalPts;
+        if (quality === 'low') {
+            latLines = 5; lonLines = 8; totalPts = 60;
+        } else if (isMobile) {
+            latLines = 7; lonLines = 10; totalPts = 120;
+        } else {
+            latLines = 10; lonLines = 16; totalPts = 200;
+        }
         for (var i = 0; i <= latLines; i++) {
             var phi = (Math.PI / latLines) * i;
             var ptsInRing = Math.max(3, Math.round(Math.sin(phi) * lonLines));
@@ -570,9 +587,10 @@ document.addEventListener('DOMContentLoaded', function () {
             projected[p] = { px: 0, py: 0, z: 0, size: 0, pulse: 0, ox: 0, oz: 0 };
         }
 
-        // Reduced streams (fewer on mobile)
+        // Reduced streams (fewer on mobile/low-end)
         var streams = [];
-        var streamCount = isMobile ? 4 : 8;
+        var streamCount = quality === 'low' ? 2 : (isMobile ? 4 : 6);
+        var maxConnections = quality === 'low' ? 3 : (isMobile ? 4 : 5);
         for (var s = 0; s < streamCount; s++) {
             streams.push({
                 startPhi: Math.acos(2 * Math.random() - 1),
@@ -644,7 +662,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.lineWidth = 0.5;
             var threshold = R * 0.3;
             for (var i = 0; i < projected.length; i++) {
-                for (var j = i + 1; j < Math.min(i + 6, projected.length); j++) {
+                for (var j = i + 1; j < Math.min(i + maxConnections + 1, projected.length); j++) {
                     var a = projected[i], b = projected[j];
                     var dx = a.px - b.px, dy = a.py - b.py;
                     var dist = Math.sqrt(dx * dx + dy * dy);
@@ -737,17 +755,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Only start animation when hero is in viewport
-        if ('IntersectionObserver' in window) {
-            var heroObs = new IntersectionObserver(function(entries) {
-                isVisible = entries[0].isIntersecting && !document.hidden;
-                if (isVisible && !animId) {
-                    animId = requestAnimationFrame(draw);
-                }
-            }, { threshold: 0 });
-            heroObs.observe(canvas.parentElement);
-        } else {
-            animId = requestAnimationFrame(draw);
+        // Only start animation when hero is in viewport (skip if reduced-motion)
+        if (!skipAnimation) {
+            if ('IntersectionObserver' in window) {
+                var heroObs = new IntersectionObserver(function(entries) {
+                    isVisible = entries[0].isIntersecting && !document.hidden;
+                    if (isVisible && !animId) {
+                        animId = requestAnimationFrame(draw);
+                    }
+                }, { threshold: 0 });
+                heroObs.observe(canvas.parentElement);
+            } else {
+                animId = requestAnimationFrame(draw);
+            }
         }
     }
 

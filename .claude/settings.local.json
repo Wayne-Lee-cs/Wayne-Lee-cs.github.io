@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(curl -s http://127.0.0.1:8000/)",
+      "WebFetch(domain:anthropic.com)",
+      "WebFetch(domain:apple.com)",
+      "Bash(dir \"C:/Users/Wayne_Lee/Desktop/website\")",
+      "Bash(dir /s \"C:/Users/Wayne_Lee/Desktop/website/blog\")",
+      "WebFetch(domain:claude.com)",
+      "Bash(curl:*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('dist',{}\\).get\\('integrity',''\\)\\)\")"
+    ]
+  }
+}
