@@ -10,12 +10,19 @@
  * - Markdown output sanitized using DOMPurify before DOM insertion
  * - External links get rel="noopener noreferrer" and target="_blank"
  */
-(function() {
+
+// Wait for external libraries and DOM to be ready
+function initMarkdownViewer() {
     var params = new URLSearchParams(window.location.search);
     var file = params.get('file');
     var container = document.getElementById('content');
     var MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
     var FETCH_TIMEOUT = 10000; // 10s timeout
+
+    if (!container) {
+        console.error('Content container not found');
+        return;
+    }
 
     if (!file) {
         container.className = 'error';
@@ -24,8 +31,6 @@
     }
 
     // Sanitize: allow subdirectory paths but block parent traversal
-    // Allowed: hello-world.md, posts/hello.md, posts/2026/hello.md
-    // Blocked: ../etc/passwd, /etc/passwd, null bytes, path traversal
     if (file.includes('..') || file.startsWith('/') || file.startsWith('.') || file.includes('\\') || file.includes('\0') || file.length > 200) {
         container.className = 'error';
         container.textContent = 'Invalid file path.';
@@ -42,27 +47,21 @@
 
     document.title = file.replace(/\.(md|pdf)$/i, '') + ' \u00b7 Juyang Li';
 
+    // Handle PDF
     if (ext === 'pdf') {
         container.className = '';
-        // Use DOM API to safely set attributes (prevents XSS from quote injection)
-        var obj = document.createElement('object');
-        obj.setAttribute('data', file);
-        obj.setAttribute('type', 'application/pdf');
-        obj.setAttribute('width', '100%');
-        obj.style.cssText = 'height:85vh;border-radius:12px;border:1px solid #e8e4df;';
-        var p = document.createElement('p');
-        p.textContent = 'Your browser does not support PDF viewing. ';
-        var a = document.createElement('a');
-        a.href = file;
-        a.textContent = 'Download PDF';
-        p.appendChild(a);
-        obj.appendChild(p);
-        container.innerHTML = '';
-        container.appendChild(obj);
+        container.innerHTML = '<object data="' + file + '" type="application/pdf" width="100%" style="height:85vh;border-radius:12px;border:1px solid #e8e4df;"><p>Your browser does not support PDF viewing. <a href="' + file + '">Download PDF</a></p></object>';
         return;
     }
 
-    // Fetch with timeout and size check
+    // Check if libraries are loaded
+    if (typeof marked === 'undefined' || !window.DOMPurify) {
+        container.className = 'error';
+        container.innerHTML = 'Error: Required libraries not loaded.<br>Please check your connection and refresh.<br><br><small>Debug: marked=' + (typeof marked) + ', DOMPurify=' + (typeof window.DOMPurify) + '</small>';
+        return;
+    }
+
+    // Fetch markdown with timeout
     var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var timer = setTimeout(function() {
         if (controller) controller.abort();
@@ -90,14 +89,15 @@
 
             // Parse markdown and sanitize with DOMPurify
             var rawHtml = marked.parse(md);
-            var cleanHtml = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml, {
+            var cleanHtml = window.DOMPurify.sanitize(rawHtml, {
                 ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'hr', 'pre', 'code',
                     'blockquote', 'ul', 'ol', 'li', 'strong', 'em', 'del', 'a', 'img',
                     'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span'],
                 ALLOWED_ATTR: ['href', 'title', 'alt', 'src']
-            }) : rawHtml; // Fallback if DOMPurify fails to load
+            });
 
             container.innerHTML = cleanHtml;
+
             // Wrap tables for mobile horizontal scroll
             var tables = container.querySelectorAll('table');
             for (var t = 0; t < tables.length; t++) {
@@ -106,6 +106,7 @@
                 tables[t].parentNode.insertBefore(wrap, tables[t]);
                 wrap.appendChild(tables[t]);
             }
+
             // Secure external links
             var links = container.querySelectorAll('a');
             for (var i = 0; i < links.length; i++) {
@@ -117,8 +118,15 @@
         })
         .catch(function(err) {
             clearTimeout(timer);
-            if (err.name === 'AbortError') return; // already handled by timer
+            if (err.name === 'AbortError') return;
             container.className = 'error';
             container.textContent = err.message;
         });
-})();
+}
+
+// Execute when DOM is ready and libraries are loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMarkdownViewer);
+} else {
+    initMarkdownViewer();
+}

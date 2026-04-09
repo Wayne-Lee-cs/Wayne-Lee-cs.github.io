@@ -6,11 +6,15 @@
     "url": "https://wayne-lee-cs.github.io"
   },
   "colors": {
-    "primary": "#000000",
-    "secondary": "#ffffff",
-    "accent": "#667eea",
-    "accent-secondary": "#764ba2",
-    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    "primary": "#191919",
+    "secondary": "#faf9f7",
+    "accent": "#d4a574",
+    "accent-hover": "#e0b88a",
+    "bg-light": "#faf9f7",
+    "bg-dark": "#0f0f0f",
+    "text-primary": "#191919",
+    "text-secondary": "#6b6560",
+    "border": "#e8e4df"
   },
   "social": {
     "github": "https://github.com/zju-ai",
@@ -31,7 +35,7 @@
       "name": "智能医疗影像诊断",
       "description": "基于深度学习的CT及X光影像自动分析系统",
       "tags": ["深度学习", "医疗", "计算机视觉"],
-      "color": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "color": "linear-gradient(135deg, #d4a574 0%, #c8956c 100%)",
       "status": "active"
     },
     {
@@ -39,7 +43,7 @@
       "name": "多语言智能翻译",
       "description": "支持50+种语言的实时翻译系统",
       "tags": ["NLP", "翻译", "Transformer"],
-      "color": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+      "color": "linear-gradient(135deg, #b8956a 0%, #9a7a55 100%)",
       "status": "active"
     },
     {
@@ -47,7 +51,7 @@
       "name": "自动驾驶感知系统",
       "description": "实时目标检测和路径规划系统",
       "tags": ["计算机视觉", "自驾", "实时处理"],
-      "color": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+      "color": "linear-gradient(135deg, #c0a080 0%, #a07850 100%)",
       "status": "active"
     },
     {
@@ -55,7 +59,7 @@
       "name": "虚拟助手大模型",
       "description": "超大规模语言模型，具备多轮对话能力",
       "tags": ["LLM", "对话系统", "推理"],
-      "color": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+      "color": "linear-gradient(135deg, #d0b090 0%, #b08860 100%)",
       "status": "active"
     },
     {
@@ -63,7 +67,7 @@
       "name": "推荐系统引擎",
       "description": "基于图神经网络的个性化推荐",
       "tags": ["GNN", "推荐", "大数据"],
-      "color": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+      "color": "linear-gradient(135deg, #c8956c 0%, #d4a574 100%)",
       "status": "active"
     },
     {
@@ -71,7 +75,7 @@
       "name": "异常检测平台",
       "description": "无监督学习框架检测数据中的异常模式",
       "tags": ["无监督", "异常检测", "安全"],
-      "color": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+      "color": "linear-gradient(135deg, #b07a52 0%, #c8956c 100%)",
       "status": "active"
     }
   ],

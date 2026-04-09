@@ -9,7 +9,20 @@
       "Bash(dir /s \"C:/Users/Wayne_Lee/Desktop/website/blog\")",
       "WebFetch(domain:claude.com)",
       "Bash(curl:*)",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('dist',{}\\).get\\('integrity',''\\)\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('dist',{}\\).get\\('integrity',''\\)\\)\")",
+      "Bash(pkill -f \"serve\")",
+      "Bash(bunx serve:*)",
+      "Bash(openssl dgst:*)",
+      "Bash(openssl base64:*)",
+      "Bash(ls -la C:/Users/Wayne_Lee/Desktop/website/*.jpg C:/Users/Wayne_Lee/Desktop/website/*.jpeg C:/Users/Wayne_Lee/Desktop/website/*.png)",
+      "Bash(node --check C:/Users/Wayne_Lee/Desktop/website/script.js)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(node --check C:/Users/Wayne_Lee/Desktop/website/blog/md-viewer.js)",
+      "Bash(python3 -c \"import json; json.load\\(open\\('C:/Users/Wayne_Lee/Desktop/website/manifest.json'\\)\\); print\\('manifest.json: valid JSON'\\)\")",
+      "Bash(python3 -c \"import json; json.load\\(open\\('C:/Users/Wayne_Lee/Desktop/website/package.json'\\)\\); print\\('package.json: valid JSON'\\)\")",
+      "Bash(echo \"script.js: $?\")",
+      "Bash(echo \"md-viewer.js: $?\")",
+      "Bash(python3:*)"
     ]
   }
 }

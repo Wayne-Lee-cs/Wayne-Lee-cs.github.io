@@ -731,7 +731,7 @@ strong { font-weight: 600; }
 .project-item {
     display: grid;
     grid-template-columns: 160px 1fr auto;
-    align-items: center;
+    align-items: start;
     gap: var(--space-6);
     padding: var(--space-5) 0;
     border-bottom: 1px solid var(--color-border);
@@ -740,7 +740,7 @@ strong { font-weight: 600; }
     color: inherit;
 }
 
-.project-item:hover h3 {
+.project-item:hover .project-body h3 {
     color: var(--color-accent);
 }
 
@@ -751,7 +751,8 @@ strong { font-weight: 600; }
 
 .project-meta {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 2px;
 }
 
 .project-tag {
@@ -759,22 +760,33 @@ strong { font-weight: 600; }
     font-weight: 500;
     color: var(--color-text-tertiary);
     letter-spacing: 0.02em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
 }
 
-.project-item h3 {
+.project-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.project-body h3 {
     font-family: var(--font-serif);
     font-size: var(--text-lg);
     font-weight: 500;
-    margin-bottom: var(--space-1);
     letter-spacing: -0.01em;
     transition: color var(--duration-fast);
+    margin: 0;
+    line-height: 1.4;
 }
 
-.project-item p {
+.project-body p {
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
     line-height: 1.6;
     max-width: 500px;
+    margin: 0;
 }
 
 .project-arrow {
@@ -782,6 +794,11 @@ strong { font-weight: 600; }
     color: var(--color-text-tertiary);
     font-weight: 300;
     transition: all var(--duration-base) var(--ease-out);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    margin-top: 2px;
 }
 
 /* ===== Publications ===== */
@@ -1313,7 +1330,19 @@ strong { font-weight: 600; }
 
     .project-item {
         grid-template-columns: 1fr;
-        gap: var(--space-2);
+        gap: var(--space-3);
+    }
+
+    .project-meta {
+        padding-top: 0;
+    }
+
+    .project-body h3 {
+        font-size: var(--text-base);
+    }
+
+    .project-body p {
+        font-size: var(--text-sm);
     }
 
     .project-arrow {

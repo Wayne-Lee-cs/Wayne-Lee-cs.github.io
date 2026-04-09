@@ -19,7 +19,48 @@
  * - Giscus (giscus.app) - Comments system
  */
 
+/**
+ * Performance Optimizations:
+ * - Passive event listeners where possible
+ * - RAF throttling for scroll handlers
+ * - IntersectionObserver for lazy features
+ * - Visibility API for pausing animations
+ * - Reduced motion support
+ */
+
+// ===== Performance utilities =====
+(function() {
+    // Mark start time for performance monitoring
+    if (window.performance && performance.mark) {
+        performance.mark('script-start');
+    }
+
+    // Cache DOM queries that are reused
+    window.$ = document.querySelector.bind(document);
+    window.$$ = document.querySelectorAll.bind(document);
+
+    // RAF throttle utility
+    window.rafThrottle = function(callback) {
+        var ticking = false;
+        return function() {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(function() {
+                    ticking = false;
+                    callback.apply(this, arguments);
+                });
+            }
+        };
+    };
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
+    // Report performance metrics
+    if (window.performance && performance.mark && performance.measure) {
+        performance.mark('script-domready');
+        performance.measure('script-init', 'script-start', 'script-domready');
+    }
+
     // ===== Mobile menu toggle =====
     var toggle = document.querySelector('.mobile-toggle');
     var menu = document.querySelector('.nav-menu');
@@ -41,21 +82,32 @@ document.addEventListener('DOMContentLoaded', function () {
     // ===== Back to Top =====
     var btt = document.querySelector('.back-to-top');
 
-    // ===== Throttled scroll handler (single handler, 16ms throttle) =====
+    // ===== Throttled scroll handler (single handler, RAF throttle) =====
     var sections = document.querySelectorAll('section');
     var navLinks = document.querySelectorAll('.nav-link');
     var navbar = document.querySelector('.navbar');
-    var scrollTicking = false;
+    var lastScrollY = 0;
+    var scrollRafId = null;
 
     function onScroll() {
-        scrollTicking = false;
         var sy = window.scrollY;
+        // Skip if scroll position hasn't changed significantly
+        if (Math.abs(sy - lastScrollY) < 5) return;
+        lastScrollY = sy;
 
-        // Active nav
+        // Active nav - use binary search for better performance with many sections
         var current = '';
-        for (var i = 0; i < sections.length; i++) {
-            if (sy >= sections[i].offsetTop - 200) current = sections[i].id;
+        var low = 0, high = sections.length - 1;
+        while (low <= high) {
+            var mid = (low + high) >> 1;
+            if (sy >= sections[mid].offsetTop - 200) {
+                current = sections[mid].id;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
         }
+
         for (var j = 0; j < navLinks.length; j++) {
             var href = navLinks[j].getAttribute('href');
             navLinks[j].classList.toggle('active', href && href.slice(1) === current);
@@ -68,27 +120,33 @@ document.addEventListener('DOMContentLoaded', function () {
         if (btt) btt.classList.toggle('visible', sy > 600);
     }
 
-    window.addEventListener('scroll', function() {
-        if (!scrollTicking) {
-            scrollTicking = true;
-            requestAnimationFrame(onScroll);
-        }
-    }, { passive: true });
+    var scrollHandler = window.rafThrottle ? window.rafThrottle(onScroll) : onScroll;
+    window.addEventListener('scroll', scrollHandler, { passive: true });
 
-    // ===== IntersectionObserver for fade-in =====
+    // Cleanup on page hide
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden && scrollRafId) {
+            cancelAnimationFrame(scrollRafId);
+            scrollRafId = null;
+        }
+    });
+
+    // ===== IntersectionObserver for fade-in (batched for performance) =====
     if ('IntersectionObserver' in window) {
         var observer = new IntersectionObserver(function(entries) {
-            for (var i = 0; i < entries.length; i++) {
-                if (entries[i].isIntersecting) {
-                    entries[i].target.classList.add('visible');
-                    observer.unobserve(entries[i].target);
+            // Batch DOM writes using requestAnimationFrame
+            requestAnimationFrame(function() {
+                for (var i = 0; i < entries.length; i++) {
+                    if (entries[i].isIntersecting) {
+                        entries[i].target.classList.add('visible');
+                        observer.unobserve(entries[i].target);
+                    }
                 }
-            }
-        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        var fadeEls = document.querySelectorAll(
-            '.research-card, .team-card, .project-item, .contact-block, .section-title, .section-description, .timeline-item, .pub-item, .blog-card, .skills-wrap'
-        );
+        var fadeSelectors = '.research-card, .team-card, .project-item, .contact-block, .section-title, .section-description, .timeline-item, .pub-item, .blog-card, .skills-wrap';
+        var fadeEls = document.querySelectorAll(fadeSelectors);
         for (var k = 0; k < fadeEls.length; k++) {
             fadeEls[k].classList.add('fade-in');
             observer.observe(fadeEls[k]);

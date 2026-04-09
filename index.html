@@ -8,7 +8,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <!-- Open Graph -->
     <meta property="og:title" content="Juyang Li · Zhejiang University">
@@ -19,13 +19,21 @@
     <meta name="twitter:card" content="summary_large_image">
     <title>Juyang Li · Zhejiang University</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Preconnect for critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap">
+    <!-- Preconnect for third-party services -->
     <link rel="preconnect" href="https://giscus.app" crossorigin>
     <link rel="dns-prefetch" href="https://giscus.app">
     <link rel="preconnect" href="https://visitor-badge.laobi.icu">
     <link rel="dns-prefetch" href="https://visitor-badge.laobi.icu">
+    <link rel="dns-prefetch" href="https://avatars.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://github.com">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="website_head_page.jpg" type="image/jpeg">
     <!-- Structured Data -->
@@ -161,7 +169,7 @@
             <div class="timeline">
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
-                    <div class="timeline-date">2024.09 - Present</div>
+                    <div class="timeline-date">2025.09 - Present</div>
                     <div class="timeline-content">
                         <h3 data-i18n="tl.1.title">浙江大学 · 人工智能专业</h3>
                         <p data-i18n="tl.1.desc">本科在读，主修人工智能，研究方向探索中。</p>
@@ -210,12 +218,12 @@
         </div>
         <div class="container">
             <div class="projects-list">
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Deep Learning · Medical</span></div><h3>智能医疗影像诊断</h3><p>基于深度学习的CT及X光影像自动分析系统，辅助医生快速准确诊断。</p><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Embodied AI · Robotics</span></div><h3>具身智能操控系统</h3><p>基于视觉-语言-动作模型的机器人操控系统，实现复杂环境下的自主抓取与交互。</p><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Computer Vision · Autonomous</span></div><h3>自动驾驶感知系统</h3><p>实时目标检测和路径规划系统，实现安全可靠的自动驾驶体验。</p><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">LLM · Reasoning</span></div><h3>虚拟助手大模型</h3><p>超大规模语言模型，具备多轮对话、任务执行和知识推理能力。</p><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">GNN · Big Data</span></div><h3>推荐系统引擎</h3><p>基于图神经网络的个性化推荐，处理海量用户数据和复杂关系。</p><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Unsupervised · Security</span></div><h3>异常检测平台</h3><p>无监督学习框架，用于检测网络、金融和工业数据中的异常模式。</p><span class="project-arrow">→</span></a>
+                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Deep Learning · Medical</span></div><div class="project-body"><h3>智能医疗影像诊断</h3><p>基于深度学习的CT及X光影像自动分析系统，辅助医生快速准确诊断。</p></div><span class="project-arrow">→</span></a>
+                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Embodied AI · Robotics</span></div><div class="project-body"><h3>具身智能操控系统</h3><p>基于视觉-语言-动作模型的机器人操控系统，实现复杂环境下的自主抓取与交互。</p></div><span class="project-arrow">→</span></a>
+                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Computer Vision · Autonomous</span></div><div class="project-body"><h3>自动驾驶感知系统</h3><p>实时目标检测和路径规划系统，实现安全可靠的自动驾驶体验。</p></div><span class="project-arrow">→</span></a>
+                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">LLM · Reasoning</span></div><div class="project-body"><h3>虚拟助手大模型</h3><p>超大规模语言模型，具备多轮对话、任务执行和知识推理能力。</p></div><span class="project-arrow">→</span></a>
+                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">GNN · Big Data</span></div><div class="project-body"><h3>推荐系统引擎</h3><p>基于图神经网络的个性化推荐，处理海量用户数据和复杂关系。</p></div><span class="project-arrow">→</span></a>
+                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Unsupervised · Security</span></div><div class="project-body"><h3>异常检测平台</h3><p>无监督学习框架，用于检测网络、金融和工业数据中的异常模式。</p></div><span class="project-arrow">→</span></a>
             </div>
         </div>
     </section>
