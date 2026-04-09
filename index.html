@@ -8,7 +8,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <!-- Open Graph -->
     <meta property="og:title" content="Juyang Li · Zhejiang University">
@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap">
     <link rel="preconnect" href="https://giscus.app" crossorigin>
     <link rel="dns-prefetch" href="https://giscus.app">
+    <link rel="preconnect" href="https://visitor-badge.laobi.icu">
+    <link rel="dns-prefetch" href="https://visitor-badge.laobi.icu">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="website_head_page.jpg" type="image/jpeg">
     <!-- Structured Data -->
@@ -48,7 +50,16 @@
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to content</a>
-    <script src="theme-init.js"></script>
+    <script>
+    (function(){
+        var t = localStorage.getItem('theme');
+        if (t) {
+            document.documentElement.setAttribute('data-theme', t);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    })();
+    </script>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -307,7 +318,7 @@
     <footer class="footer">
         <div class="container footer-inner">
             <span class="footer-logo">Juyang Li</span>
-            <img src="https://visitor-badge.laobi.icu/badge?page_id=wayne-lee-cs.github.io" alt="visitors" class="visitor-badge" loading="lazy">
+            <img src="https://visitor-badge.laobi.icu/badge?page_id=wayne-lee-cs.github.io" alt="visitors" class="visitor-badge" loading="lazy" onerror="this.style.display='none'">
             <p>&copy; 2026 Juyang Li, Zhejiang University. All rights reserved.</p>
         </div>
     </footer>

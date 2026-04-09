@@ -12,6 +12,11 @@
       "src": "website_head_page.jpg",
       "sizes": "192x192",
       "type": "image/jpeg"
+    },
+    {
+      "src": "website_head_page.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
     }
   ]
 }

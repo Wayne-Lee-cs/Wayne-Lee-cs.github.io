@@ -3,11 +3,11 @@
  * ===================
  * Purpose: Render markdown files and PDF documents in the browser
  * Usage: md-viewer.html?file=path/to/file.md
- * Dependencies: marked.js (loaded from cdn.jsdelivr.net)
+ * Dependencies: marked.js, DOMPurify (loaded from cdn.jsdelivr.net)
  *
  * Security:
  * - Filename sanitization blocks path traversal (.., /, \) and length limits
- * - Markdown output sanitized: removes dangerous tags and event handlers
+ * - Markdown output sanitized using DOMPurify before DOM insertion
  * - External links get rel="noopener noreferrer" and target="_blank"
  */
 (function() {
@@ -93,28 +93,17 @@
                 throw new Error('File too large (max 5MB).');
             }
             container.className = 'md-content';
-            // Sanitize: strip dangerous tags/attributes from marked output
-            var div = document.createElement('div');
-            div.innerHTML = marked.parse(md);
-            // Remove script, iframe, object, embed, form, style tags
-            var dangerous = div.querySelectorAll('script,iframe,object,embed,form,style,link');
-            for (var d = 0; d < dangerous.length; d++) dangerous[d].remove();
-            // Remove event handler attributes from all elements
-            var allEls = div.querySelectorAll('*');
-            for (var e = 0; e < allEls.length; e++) {
-                var attrs = allEls[e].attributes;
-                for (var a = attrs.length - 1; a >= 0; a--) {
-                    if (attrs[a].name.indexOf('on') === 0) allEls[e].removeAttribute(attrs[a].name);
-                }
-                // Remove javascript: hrefs
-                if (allEls[e].hasAttribute('href') && allEls[e].getAttribute('href').trim().toLowerCase().indexOf('javascript:') === 0) {
-                    allEls[e].removeAttribute('href');
-                }
-                if (allEls[e].hasAttribute('src') && allEls[e].getAttribute('src').trim().toLowerCase().indexOf('javascript:') === 0) {
-                    allEls[e].removeAttribute('src');
-                }
-            }
-            container.innerHTML = div.innerHTML;
+
+            // Parse markdown and sanitize with DOMPurify
+            var rawHtml = marked.parse(md);
+            var cleanHtml = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml, {
+                ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'hr', 'pre', 'code',
+                    'blockquote', 'ul', 'ol', 'li', 'strong', 'em', 'del', 'a', 'img',
+                    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span'],
+                ALLOWED_ATTR: ['href', 'title', 'alt', 'src']
+            }) : rawHtml; // Fallback if DOMPurify fails to load
+
+            container.innerHTML = cleanHtml;
             // Wrap tables for mobile horizontal scroll
             var tables = container.querySelectorAll('table');
             for (var t = 0; t < tables.length; t++) {

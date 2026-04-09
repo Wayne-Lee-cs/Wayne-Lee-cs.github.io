@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://avatars.githubusercontent.com https://github.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'self'; upgrade-insecure-requests">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
@@ -36,7 +36,16 @@
     </style>
 </head>
 <body>
-    <script src="../theme-init.js"></script>
+    <script>
+    (function(){
+        var t = localStorage.getItem('theme');
+        if (t) {
+            document.documentElement.setAttribute('data-theme', t);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    })();
+    </script>
     <nav class="navbar">
         <div class="nav-container">
             <a href="../index.html" class="logo">Juyang Li</a>

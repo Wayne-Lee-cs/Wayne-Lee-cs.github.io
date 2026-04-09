@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             this.textContent = email;
             this.removeAttribute('data-user');
             this.removeAttribute('data-domain');
-            window.location.href = 'mailto:' + email;
+            // Don't auto-open mail client; let user click the revealed link to send
         });
     }
 
@@ -771,30 +771,31 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // ===== Giscus Comments =====
+    // ===== Giscus Comments (Lazy Loaded) =====
     (function() {
-        // Giscus config - visit https://giscus.app to get your IDs
-        // 1. Go to https://giscus.app
-        // 2. Select your repo and discussion category
-        // 3. Copy the generated config values below
         var GISCUS_REPO = 'Wayne-Lee-cs/Wayne-Lee-cs.github.io';
-        var GISCUS_REPO_ID = 'R_kgDORxTLNQ';        // e.g. 'R_kgDO...'
+        var GISCUS_REPO_ID = 'R_kgDORxTLNQ';
         var GISCUS_CATEGORY = 'Guestbook';
-        var GISCUS_CATEGORY_ID = 'DIC_kwDORxTLNc4C5wG2'; // e.g. 'DIC_kwDO...'
+        var GISCUS_CATEGORY_ID = 'DIC_kwDORxTLNc4C5wG2';
 
         var container = document.getElementById('giscus-container');
         if (!container) return;
 
-        // If not configured, show placeholder message
         if (GISCUS_REPO_ID === 'YOUR_REPO_ID') {
-            container.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--color-text-tertiary);font-size:14px;background:var(--color-bg-secondary);border-radius:12px;border:1px dashed var(--color-border)">To enable comments, configure Giscus at <a href="https://giscus.app" target="_blank" rel="noopener" style="color:var(--color-accent)">giscus.app</a> and add your repo/category IDs to script.js</div>';
+            container.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--color-text-tertiary);font-size:14px;background:var(--color-bg-secondary);border-radius:12px;border:1px dashed var(--color-border)">To enable comments, configure Giscus at <a href="https://giscus.app" target="_blank" rel="noopener" style="color:var(--color-accent)">giscus.app</a></div>';
             return;
         }
 
+        var giscusLoaded = false;
+        var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+
         function loadGiscus(theme) {
-            // Remove existing script to re-render with new theme
-            var existing = container.querySelector('script');
-            if (existing) existing.remove();
+            // Remove old iframe + script so Giscus reinitializes with the correct theme
+            var oldIframe = container.querySelector('.giscus-frame');
+            var oldScript = container.querySelector('script[data-repo]');
+            if (oldIframe) oldIframe.remove();
+            if (oldScript) oldScript.remove();
+            giscusLoaded = false;
 
             var script = document.createElement('script');
             script.src = 'https://giscus.app/client.js';
@@ -807,23 +808,36 @@ document.addEventListener('DOMContentLoaded', function () {
             script.setAttribute('data-reactions-enabled', '1');
             script.setAttribute('data-emit-metadata', '0');
             script.setAttribute('data-input-position', 'bottom');
-            script.setAttribute('data-theme', 'preferred_color_scheme');
+            script.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
             script.setAttribute('data-lang', 'zh-CN');
             script.setAttribute('data-crossorigin', 'anonymous');
             script.async = true;
             container.appendChild(script);
+            giscusLoaded = true;
         }
 
-        // Load with current theme
-        var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        loadGiscus(currentTheme);
+        // Lazy load: only load when comments section is near viewport
+        if ('IntersectionObserver' in window) {
+            var giscusObserver = new IntersectionObserver(function(entries) {
+                if (entries[0].isIntersecting) {
+                    loadGiscus(currentTheme);
+                    giscusObserver.disconnect();
+                }
+            }, { rootMargin: '200px' }); // Start loading 200px before visible
+            giscusObserver.observe(container);
+        } else {
+            // Fallback: load immediately if IntersectionObserver not supported
+            loadGiscus(currentTheme);
+        }
 
-        // Listen for theme changes and update Giscus
+        // Listen for theme changes — recreate Giscus with correct theme
         var themeBtn = document.querySelector('.theme-toggle');
         if (themeBtn) {
             themeBtn.addEventListener('click', function() {
-                var newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                loadGiscus(newTheme);
+                // data-theme was already flipped by the earlier theme toggle handler;
+                // read it directly and pass to Giscus without inversion
+                currentTheme = document.documentElement.getAttribute('data-theme');
+                loadGiscus(currentTheme);
             });
         }
     })();
