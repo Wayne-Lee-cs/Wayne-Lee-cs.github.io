@@ -26,13 +26,7 @@
     // Sanitize: allow subdirectory paths but block parent traversal
     // Allowed: hello-world.md, posts/hello.md, posts/2026/hello.md
     // Blocked: ../etc/passwd, /etc/passwd, null bytes, path traversal
-    if (file.includes('..') || file.startsWith('/') || file.includes('\\') || file.includes('\0') || file.length > 200) {
-        container.className = 'error';
-        container.textContent = 'Invalid file path.';
-        return;
-    }
-    // Ensure path doesn't escape blog directory (defense in depth)
-    if (file.startsWith('.') || file.includes('..')) {
+    if (file.includes('..') || file.startsWith('/') || file.startsWith('.') || file.includes('\\') || file.includes('\0') || file.length > 200) {
         container.className = 'error';
         container.textContent = 'Invalid file path.';
         return;
