@@ -857,6 +857,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var script = document.createElement('script');
             script.src = 'https://giscus.app/client.js';
+            script.integrity = 'sha256-SBqvde6eszAbC7r/Rapmayrt8h3IkICz3sMx6GN/v8M=';
+            script.crossOrigin = 'anonymous';
             script.setAttribute('data-repo', GISCUS_REPO);
             script.setAttribute('data-repo-id', GISCUS_REPO_ID);
             script.setAttribute('data-category', GISCUS_CATEGORY);

@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://avatars.githubusercontent.com https://github.com https:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-k04+Nuni2gr7Gm51B1uw8JrwUpOoROhKdHfvQJEcNJo=' 'sha256-SCmGefnjCPBf3NW3QhwV/PtUWEWjqZu68xAziQYQ6ws='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://cdn.jsdelivr.net; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <title>Blog · Juyang Li</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="icon" href="../website_head_page.jpg" type="image/jpeg">
+    <!-- Preconnect for third-party libraries -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <style>
         .article { max-width: 780px; margin: 0 auto; padding: 120px 24px 80px; }
         .article-back {
@@ -107,8 +110,8 @@
         });
     }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js" crossorigin="anonymous"></script>
-    <script src="md-viewer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js" crossorigin="anonymous" defer></script>
+    <script src="md-viewer.js" defer></script>
 </body>
 </html>

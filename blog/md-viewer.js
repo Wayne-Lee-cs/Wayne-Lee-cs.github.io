@@ -57,7 +57,7 @@ function initMarkdownViewer() {
     // Check if libraries are loaded
     if (typeof marked === 'undefined' || !window.DOMPurify) {
         container.className = 'error';
-        container.innerHTML = 'Error: Required libraries not loaded.<br>Please check your connection and refresh.<br><br><small>Debug: marked=' + (typeof marked) + ', DOMPurify=' + (typeof window.DOMPurify) + '</small>';
+        container.innerHTML = 'Error: Required libraries not loaded.<br>Please check your connection and refresh.';
         return;
     }
 

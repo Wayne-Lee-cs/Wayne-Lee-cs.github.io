@@ -8,7 +8,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app 'sha256-SBqvde6eszAbC7r/Rapmayrt8h3IkICz3sMx6GN/v8M='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <!-- Open Graph -->
     <meta property="og:title" content="Juyang Li · Zhejiang University">
@@ -20,7 +20,7 @@
     <title>Juyang Li · Zhejiang University</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Preconnect for critical resources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -106,7 +106,7 @@
                 </div>
             </div>
             <div class="hero-visual" aria-hidden="true">
-                <canvas id="neural-canvas"></canvas>
+                <canvas id="neural-canvas" fetchpriority="high"></canvas>
             </div>
         </div>
     </section>
