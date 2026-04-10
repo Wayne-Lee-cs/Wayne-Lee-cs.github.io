@@ -22,7 +22,9 @@
       "Bash(python3 -c \"import json; json.load\\(open\\('C:/Users/Wayne_Lee/Desktop/website/package.json'\\)\\); print\\('package.json: valid JSON'\\)\")",
       "Bash(echo \"script.js: $?\")",
       "Bash(echo \"md-viewer.js: $?\")",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)"
     ]
   }
 }
