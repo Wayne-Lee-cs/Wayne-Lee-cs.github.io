@@ -888,14 +888,21 @@ document.addEventListener('DOMContentLoaded', function () {
             loadGiscus(currentTheme);
         }
 
-        // Listen for theme changes — recreate Giscus with correct theme
+        // Listen for theme changes — use postMessage to update Giscus theme without recreating iframe
         var themeBtn = document.querySelector('.theme-toggle');
         if (themeBtn) {
             themeBtn.addEventListener('click', function() {
-                // data-theme was already flipped by the earlier theme toggle handler;
-                // read it directly and pass to Giscus without inversion
                 currentTheme = document.documentElement.getAttribute('data-theme');
-                loadGiscus(currentTheme);
+                var iframe = container.querySelector('.giscus-frame');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage(
+                        { giscus: { setConfig: { theme: currentTheme === 'dark' ? 'dark' : 'light' } } },
+                        'https://giscus.app'
+                    );
+                } else {
+                    // Giscus not yet loaded — trigger lazy load with correct theme
+                    loadGiscus(currentTheme);
+                }
             });
         }
     })();
