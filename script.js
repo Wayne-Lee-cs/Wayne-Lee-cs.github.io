@@ -502,6 +502,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var terminalOutput = document.getElementById('terminal-output');
     if (terminalEl && terminalInput && terminalOutput) {
         var termLastFocus = null; // restore focus after close
+        var termNavLock = false; // prevent terminal toggle during navigation
         function closeTerminal() {
             terminalEl.hidden = true;
             document.body.style.overflow = '';
@@ -541,7 +542,11 @@ document.addEventListener('DOMContentLoaded', function () {
             while (terminalOutput.children.length > 200) {
                 terminalOutput.removeChild(terminalOutput.firstChild);
             }
-            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            // Only auto-scroll if user is near bottom (within 100px) or just started
+            var isNearBottom = terminalOutput.scrollHeight - terminalOutput.scrollTop - terminalOutput.clientHeight < 100;
+            if (isNearBottom) {
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
         }
         function termExec(cmd) {
             cmd = cmd.trim().toLowerCase();
@@ -561,7 +566,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!cmd) return;
             var result = termCmds[cmd];
             if (!result) { termAddLine('Command not found: ' + cmd + '. Type "help" for available commands.', 't-error'); return; }
-            if (result === '__clear__') { terminalOutput.innerHTML = ''; return; }
+            if (result === '__clear__') {
+                while (terminalOutput.firstChild) {
+                    terminalOutput.removeChild(terminalOutput.firstChild);
+                }
+                return;
+            }
             if (result === '__exit__') { closeTerminal(); return; }
             if (result === '__theme__') {
                 var cur = document.documentElement.getAttribute('data-theme');
@@ -587,6 +597,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (result.indexOf('__nav__') === 0) {
                 var target = result.replace('__nav__', '');
                 closeTerminal();
+                termNavLock = true;
                 setTimeout(function() {
                     var el = document.querySelector(target);
                     if (el) {
@@ -594,7 +605,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     } else {
                         window.location.hash = target;
                     }
-                }, 50);
+                    termNavLock = false;
+                }, 300);
                 return;
             }
             termAddLine(result, 't-result');
@@ -609,12 +621,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('keydown', function(e) {
             if (e.key === '`' && !e.ctrlKey && !e.altKey && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                 e.preventDefault();
-                if (terminalEl.hidden) {
+                if (terminalEl.hidden && !termNavLock) {
                     termLastFocus = document.activeElement;
                     terminalEl.hidden = false;
                     document.body.style.overflow = 'hidden';
                     terminalInput.focus();
-                } else {
+                } else if (!terminalEl.hidden) {
                     closeTerminal();
                 }
             }
