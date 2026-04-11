@@ -35,10 +35,6 @@
         performance.mark('script-start');
     }
 
-    // Cache DOM queries that are reused
-    window.$ = document.querySelector.bind(document);
-    window.$$ = document.querySelectorAll.bind(document);
-
     // RAF throttle utility
     window.rafThrottle = function(callback) {
         var ticking = false;
@@ -178,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
             var next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
-            if (typeof drawRadar === 'function') drawRadar();
-            if (drawRadar && drawRadar.updateLegend) drawRadar.updateLegend();
+            if (typeof window._drawRadar === 'function') window._drawRadar();
+            if (typeof window._updateLegendColors === 'function') window._updateLegendColors();
         });
     }
 
@@ -341,8 +337,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ===== Skills Radar Chart =====
-    var radarCanvas = document.getElementById('radar-canvas');
-    if (radarCanvas) {
+    (function() {
+        var radarCanvas = document.getElementById('radar-canvas');
+        if (!radarCanvas) return;
         var rCtx = radarCanvas.getContext('2d');
         var radarDpr = Math.min(window.devicePixelRatio || 1, 2);
         var radarLogicalW = 400, radarLogicalH = 400;
@@ -377,14 +374,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 legendEl.appendChild(item);
                 legendDots.push(dot);
             }
-            // Update legend dot colors immediately on theme change
-            function updateLegendColors() {
-                var isDarkLegend = document.documentElement.getAttribute('data-theme') === 'dark';
-                for (var di = 0; di < legendDots.length; di++) {
-                    legendDots[di].style.background = isDarkLegend ? skills[di].colorDark : skills[di].colorLight;
-                }
+        }
+
+        function updateLegendColors() {
+            var isDarkLegend = document.documentElement.getAttribute('data-theme') === 'dark';
+            for (var di = 0; di < legendDots.length; di++) {
+                legendDots[di].style.background = isDarkLegend ? skills[di].colorDark : skills[di].colorLight;
             }
         }
+
         function drawRadar() {
             var w = radarLogicalW, h = radarLogicalH;
             var cx = w / 2, cy = h / 2, maxR = Math.min(w, h) * 0.38;
@@ -395,7 +393,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var labelColor = isDark ? 'rgba(250,249,247,0.7)' : 'rgba(25,25,25,0.6)';
             var accentFill = isDark ? 'rgba(212,165,116,0.15)' : 'rgba(200,149,108,0.15)';
             var accentStroke = isDark ? 'rgba(212,165,116,0.6)' : 'rgba(200,149,108,0.6)';
-            var bgGlow = isDark ? 'rgba(212,165,116,0.06)' : 'rgba(200,149,108,0.05)';
             rCtx.clearRect(0, 0, w, h);
             // Grid rings
             for (var ring = 1; ring <= 4; ring++) {
@@ -451,9 +448,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 rCtx.fillText(skills[i].name, lx, ly);
             }
         }
+
         drawRadar();
-        drawRadar.updateLegend = updateLegendColors;
-    }
+
+        // Expose for theme toggle (avoids block-scoped function declaration issue)
+        window._drawRadar = drawRadar;
+        window._updateLegendColors = updateLegendColors;
+    })();
 
     // ===== Konami Code Easter Egg =====
     var konamiSeq = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right B A
