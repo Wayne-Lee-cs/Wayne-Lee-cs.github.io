@@ -113,8 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
             navLinks[j].classList.toggle('active', href && href.slice(1) === current);
         }
 
-        // Navbar border
-        navbar.style.borderBottomColor = sy > 10 ? 'var(--color-border)' : 'transparent';
+        // Navbar border — use class for CSS transition
+        navbar.classList.toggle('scrolled', sy > 10);
 
         // Back to top visibility
         if (btt) btt.classList.toggle('visible', sy > 600);
@@ -179,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
             if (typeof drawRadar === 'function') drawRadar();
+            if (drawRadar && drawRadar.updateLegend) drawRadar.updateLegend();
         });
     }
 
@@ -244,7 +245,9 @@ document.addEventListener('DOMContentLoaded', function () {
             applyLang(currentLang);
             // Re-run typewriter with new language
             if (tw) {
+                if (twTimer !== null) { clearTimeout(twTimer); twTimer = null; }
                 tw.classList.remove('done');
+                tw.setAttribute('aria-hidden', 'true');
                 twLang = currentLang;
                 twLines = (tw.getAttribute('data-text-' + twLang) || tw.getAttribute('data-text-en')).split('|');
                 twLine = 0; twChar = 0; twText = '';
@@ -259,8 +262,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var blogCards = document.querySelectorAll('.blog-card');
     for (var f = 0; f < filters.length; f++) {
         filters[f].addEventListener('click', function() {
-            for (var x = 0; x < filters.length; x++) filters[x].classList.remove('active');
+            for (var x = 0; x < filters.length; x++) {
+                filters[x].classList.remove('active');
+                filters[x].setAttribute('aria-pressed', 'false');
+            }
             this.classList.add('active');
+            this.setAttribute('aria-pressed', 'true');
             var tag = this.dataset.tag;
             for (var c = 0; c < blogCards.length; c++) {
                 var tags = blogCards[c].dataset.tags || '';
@@ -307,22 +314,30 @@ document.addEventListener('DOMContentLoaded', function () {
     // ===== Typewriter Effect =====
     var tw = document.querySelector('.typewriter');
     if (tw) {
+        tw.setAttribute('aria-hidden', 'true'); // hide from screen readers during animation
         var twLang = currentLang;
         var twLines = (tw.getAttribute('data-text-' + twLang) || tw.getAttribute('data-text-en')).split('|');
         var twLine = 0, twChar = 0, twText = '';
+        var twTimer = null;
         function typeNext() {
-            if (twLine >= twLines.length) { tw.classList.add('done'); return; }
+            if (twLine >= twLines.length) {
+                tw.classList.add('done');
+                tw.setAttribute('aria-hidden', 'false');
+                tw.setAttribute('aria-label', twLines.join(' '));
+                twTimer = null;
+                return;
+            }
             if (twChar <= twLines[twLine].length) {
                 twText = twLines.slice(0, twLine).join('\n') + '\n' + twLines[twLine].substring(0, twChar);
                 tw.innerHTML = twText.split('\n').join('<br>');
                 twChar++;
-                setTimeout(typeNext, 40 + Math.random() * 30);
+                twTimer = setTimeout(typeNext, 40 + Math.random() * 30);
             } else {
                 twLine++; twChar = 0;
-                setTimeout(typeNext, 300);
+                twTimer = setTimeout(typeNext, 300);
             }
         }
-        setTimeout(typeNext, 500);
+        twTimer = setTimeout(typeNext, 500);
     }
 
     // ===== Skills Radar Chart =====
@@ -337,27 +352,37 @@ document.addEventListener('DOMContentLoaded', function () {
         radarCanvas.style.height = radarLogicalH + 'px';
         rCtx.setTransform(radarDpr, 0, 0, radarDpr, 0, 0);
         var skills = [
-            { name: 'Python', value: 0.85, color: '#c8956c' },
-            { name: 'PyTorch', value: 0.65, color: '#d4a574' },
-            { name: 'C/C++', value: 0.6, color: '#a07850' },
-            { name: 'Linux', value: 0.7, color: '#b08860' },
-            { name: 'Math', value: 0.75, color: '#c0a080' },
-            { name: 'Git', value: 0.7, color: '#d0b090' }
+            { name: 'Python', value: 0.85, colorLight: '#c8956c', colorDark: '#d4a574' },
+            { name: 'PyTorch', value: 0.65, colorLight: '#b08050', colorDark: '#d4a574' },
+            { name: 'C/C++', value: 0.6, colorLight: '#a07850', colorDark: '#b8956a' },
+            { name: 'Linux', value: 0.7, colorLight: '#b08860', colorDark: '#c8a070' },
+            { name: 'Math', value: 0.75, colorLight: '#c0a080', colorDark: '#d4b090' },
+            { name: 'Git', value: 0.7, colorLight: '#c09070', colorDark: '#d4a574' }
         ];
         var legendEl = document.getElementById('skills-legend');
+        var legendDots = [];
         if (legendEl) {
             for (var si = 0; si < skills.length; si++) {
                 var item = document.createElement('div');
                 item.className = 'skill-item';
                 var dot = document.createElement('span');
                 dot.className = 'skill-dot';
-                dot.style.background = skills[si].color;
                 var name = document.createTextNode(skills[si].name + ' ');
                 var pct = document.createElement('span');
-                pct.style.cssText = 'color:#666;margin-left:auto';
+                pct.style.cssText = 'color:var(--color-text-tertiary);margin-left:auto';
                 pct.textContent = Math.round(skills[si].value * 100) + '%';
-                item.appendChild(dot); item.appendChild(name); item.appendChild(pct);
+                item.appendChild(dot);
+                item.appendChild(name);
+                item.appendChild(pct);
                 legendEl.appendChild(item);
+                legendDots.push(dot);
+            }
+            // Update legend dot colors immediately on theme change
+            function updateLegendColors() {
+                var isDarkLegend = document.documentElement.getAttribute('data-theme') === 'dark';
+                for (var di = 0; di < legendDots.length; di++) {
+                    legendDots[di].style.background = isDarkLegend ? skills[di].colorDark : skills[di].colorLight;
+                }
             }
         }
         function drawRadar() {
@@ -368,6 +393,9 @@ document.addEventListener('DOMContentLoaded', function () {
             var gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
             var axisColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
             var labelColor = isDark ? 'rgba(250,249,247,0.7)' : 'rgba(25,25,25,0.6)';
+            var accentFill = isDark ? 'rgba(212,165,116,0.15)' : 'rgba(200,149,108,0.15)';
+            var accentStroke = isDark ? 'rgba(212,165,116,0.6)' : 'rgba(200,149,108,0.6)';
+            var bgGlow = isDark ? 'rgba(212,165,116,0.06)' : 'rgba(200,149,108,0.05)';
             rCtx.clearRect(0, 0, w, h);
             // Grid rings
             for (var ring = 1; ring <= 4; ring++) {
@@ -400,9 +428,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (i === 0) rCtx.moveTo(x, y); else rCtx.lineTo(x, y);
             }
             rCtx.closePath();
-            rCtx.fillStyle = 'rgba(200,149,108,0.15)';
+            rCtx.fillStyle = accentFill;
             rCtx.fill();
-            rCtx.strokeStyle = 'rgba(200,149,108,0.6)';
+            rCtx.strokeStyle = accentStroke;
             rCtx.lineWidth = 2;
             rCtx.stroke();
             // Data points + labels
@@ -412,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
                 rCtx.beginPath();
                 rCtx.arc(x, y, 4, 0, 6.28);
-                rCtx.fillStyle = skills[i].color;
+                rCtx.fillStyle = isDark ? skills[i].colorDark : skills[i].colorLight;
                 rCtx.fill();
                 // Label
                 var lx = cx + Math.cos(a) * (maxR + 20), ly = cy + Math.sin(a) * (maxR + 20);
@@ -424,6 +452,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         drawRadar();
+        drawRadar.updateLegend = updateLegendColors;
     }
 
     // ===== Konami Code Easter Egg =====
@@ -469,6 +498,23 @@ document.addEventListener('DOMContentLoaded', function () {
     var terminalInput = document.getElementById('terminal-input');
     var terminalOutput = document.getElementById('terminal-output');
     if (terminalEl && terminalInput && terminalOutput) {
+        var termLastFocus = null; // restore focus after close
+        function closeTerminal() {
+            terminalEl.hidden = true;
+            document.body.style.overflow = '';
+            if (termLastFocus) { termLastFocus.focus(); termLastFocus = null; }
+        }
+        function trapFocus(e) {
+            // Keep focus within terminal window
+            var focusable = terminalEl.querySelectorAll('input, button, [tabindex]:not([tabindex="-1"])');
+            if (focusable.length === 0) return;
+            var first = focusable[0], last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault(); last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault(); first.focus();
+            }
+        }
         var termCmds = {
             help: 'Available commands:\n  about    - About me\n  skills   - My tech stack\n  projects - List projects\n  blog     - Go to blog\n  contact  - Contact info\n  theme    - Toggle dark mode\n  clear    - Clear terminal\n  exit     - Close terminal',
             about: 'Juyang Li\nUndergraduate @ Zhejiang University\nMajor: Artificial Intelligence\nInterests: Deep Learning, Computer Vision, Embodied AI',
@@ -513,7 +559,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var result = termCmds[cmd];
             if (!result) { termAddLine('Command not found: ' + cmd + '. Type "help" for available commands.', 't-error'); return; }
             if (result === '__clear__') { terminalOutput.innerHTML = ''; return; }
-            if (result === '__exit__') { terminalEl.hidden = true; document.body.style.overflow = ''; return; }
+            if (result === '__exit__') { closeTerminal(); return; }
             if (result === '__theme__') {
                 var cur = document.documentElement.getAttribute('data-theme');
                 var next = cur === 'dark' ? 'light' : 'dark';
@@ -523,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             if (result.indexOf('__nav__') === 0) {
-                terminalEl.hidden = true; document.body.style.overflow = '';
+                closeTerminal();
                 window.location.hash = result.replace('__nav__', '');
                 return;
             }
@@ -531,18 +577,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         terminalInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') { termExec(this.value); this.value = ''; }
-            if (e.key === 'Escape') { terminalEl.hidden = true; document.body.style.overflow = ''; }
+            if (e.key === 'Escape') { closeTerminal(); }
+        });
+        terminalEl.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') { trapFocus(e); }
         });
         document.addEventListener('keydown', function(e) {
             if (e.key === '`' && !e.ctrlKey && !e.altKey && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                 e.preventDefault();
                 if (terminalEl.hidden) {
+                    termLastFocus = document.activeElement;
                     terminalEl.hidden = false;
                     document.body.style.overflow = 'hidden';
                     terminalInput.focus();
                 } else {
-                    terminalEl.hidden = true;
-                    document.body.style.overflow = '';
+                    closeTerminal();
                 }
             }
         });
@@ -555,20 +604,14 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(function() {
             hint.classList.remove('show');
             hint.classList.add('hide');
-            sessionStorage.setItem('terminal-hint-seen', '1');
+            try { sessionStorage.setItem('terminal-hint-seen', '1'); } catch (e) { /* private browsing or storage full */ }
         }, 8000);
     }
 
     // ===== Optimized Canvas Animation =====
     var canvas = document.getElementById('neural-canvas');
     if (canvas) {
-        // Respect prefers-reduced-motion
         var skipAnimation = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (skipAnimation) {
-            // Draw a single static frame instead
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-        }
 
         var ctx = canvas.getContext('2d', { powerPreference: 'high-performance' });
         var rw, rh, animId = null, isVisible = true;
@@ -576,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var mouseX = 0, mouseY = 0;
         var rotY = 0, rotX = 0.3;
 
-        // Debounced resize
+        // Debounced resize — defined before early return so it's available if skipAnimation is true
         var resizeTimer;
         function resize() {
             var r = canvas.parentElement.getBoundingClientRect();
@@ -586,13 +629,22 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             cachedBg = null; // invalidate cached gradient
         }
-        resize();
+
+        // Resize handler — needed for all users (including reduced-motion)
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(resize, 150);
         });
 
-        // Mouse tracking
+        // Respect prefers-reduced-motion — skip animation loop
+        if (skipAnimation) {
+            resize();
+            return;
+        }
+
+        resize();
+
+        // Mouse tracking — passive for smooth scroll on mobile
         canvas.parentElement.addEventListener('mousemove', function(e) {
             var r = canvas.parentElement.getBoundingClientRect();
             mouseX = (e.clientX - r.left) / rw - 0.5;
@@ -664,7 +716,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var scanAngle = 0, t = 0;
         var cosY, sinY, cosX, sinX; // cached per frame
         var _pr = { x: 0, y: 0, z: 0 }; // reused projection result
-        var cachedBg = null, cachedBgR = 0, cachedBgCx = 0; // cached background gradient
+        var cachedBg = null, cachedBgR = 0, cachedBgCx = 0, cachedBgTheme = null; // cached background gradient
 
         function projectPt(x, y, z) {
             var x1 = x * cosY - z * sinY, z1 = x * sinY + z * cosY;
@@ -674,6 +726,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function draw() {
             if (!isVisible) { animId = null; return; }
+            if (skipAnimation) { animId = null; return; }
             t += 0.016;
             ctx.clearRect(0, 0, rw, rh);
 
@@ -691,13 +744,22 @@ document.addEventListener('DOMContentLoaded', function () {
             var R = Math.min(rw, rh) * 0.36;
             scanAngle += 0.015;
 
-            // Background glow (cached, only recreate on resize)
-            if (!cachedBg || cachedBgR !== R || cachedBgCx !== cx) {
+            // Background glow (cached, only recreate on resize or theme change)
+            var nowTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            var tc = {
+                conn: nowTheme === 'dark' ? '200,170,160' : '200,170,140',
+                stream: nowTheme === 'dark' ? '255,195,125' : '255,180,100',
+                ring: nowTheme === 'dark' ? '200,149,108' : '200,149,108',
+                scanAlpha: nowTheme === 'dark' ? '0.22' : '0.12'
+            };
+            if (!cachedBg || cachedBgR !== R || cachedBgCx !== cx || cachedBgTheme !== nowTheme) {
+                var bgAlpha = nowTheme === 'dark' ? '0.03' : '0.05';
+                var bgMidAlpha = nowTheme === 'dark' ? '0.015' : '0.02';
                 cachedBg = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.8);
-                cachedBg.addColorStop(0, 'rgba(200,149,108,0.05)');
-                cachedBg.addColorStop(0.5, 'rgba(140,100,70,0.02)');
+                cachedBg.addColorStop(0, 'rgba(200,149,108,' + bgAlpha + ')');
+                cachedBg.addColorStop(0.5, 'rgba(140,100,70,' + bgMidAlpha + ')');
                 cachedBg.addColorStop(1, 'transparent');
-                cachedBgR = R; cachedBgCx = cx;
+                cachedBgR = R; cachedBgCx = cx; cachedBgTheme = nowTheme;
             }
             ctx.fillStyle = cachedBg;
             ctx.fillRect(0, 0, rw, rh);
@@ -729,7 +791,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ctx.beginPath();
                         ctx.moveTo(a.px, a.py);
                         ctx.lineTo(b.px, b.py);
-                        ctx.strokeStyle = 'rgba(200,170,140,' + alpha + ')';
+                        ctx.strokeStyle = 'rgba(' + tc.conn + ',' + alpha + ')';
                         ctx.stroke();
                     }
                 }
@@ -737,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Scan beam — simple highlight for front-facing points (no gradient per point)
             var scanX = Math.cos(scanAngle), scanZ = Math.sin(scanAngle);
-            ctx.fillStyle = 'rgba(255,200,120,0.12)';
+            ctx.fillStyle = 'rgba(255,200,120,' + tc.scanAlpha + ')';
             for (var i = 0; i < projected.length; i++) {
                 var p = projected[i];
                 if (p.z < 0) continue;
@@ -769,7 +831,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     var spx = cx + spr.x * R, spy = cy + spr.y * R;
                     if (step === 0) ctx.moveTo(spx, spy); else ctx.lineTo(spx, spy);
                 }
-                ctx.strokeStyle = 'rgba(255,180,100,0.2)';
+                ctx.strokeStyle = 'rgba(' + tc.stream + ',0.2)';
                 ctx.lineWidth = st.width;
                 ctx.stroke();
             }
@@ -792,17 +854,22 @@ document.addEventListener('DOMContentLoaded', function () {
             // Outer ring + arc
             ctx.beginPath();
             ctx.arc(cx, cy, R * 1.05, 0, 6.28);
-            ctx.strokeStyle = 'rgba(200,149,108,0.06)';
+            ctx.strokeStyle = 'rgba(' + tc.ring + ',0.06)';
             ctx.lineWidth = 1;
             ctx.stroke();
 
             ctx.beginPath();
             ctx.arc(cx, cy, R * 1.05, scanAngle, scanAngle + 0.8);
-            ctx.strokeStyle = 'rgba(255,180,100,0.2)';
+            ctx.strokeStyle = 'rgba(' + tc.stream + ',0.2)';
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            animId = requestAnimationFrame(draw);
+            // Only schedule next frame if canvas is still visible
+            if (isVisible) {
+                animId = requestAnimationFrame(draw);
+            } else {
+                animId = null;
+            }
         }
 
         // Visibility API —pause animation when tab is hidden
@@ -844,7 +911,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        var giscusLoaded = false;
         var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
         function loadGiscus(theme) {
@@ -853,7 +919,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var oldScript = container.querySelector('script[data-repo]');
             if (oldIframe) oldIframe.remove();
             if (oldScript) oldScript.remove();
-            giscusLoaded = false;
 
             var script = document.createElement('script');
             script.src = 'https://giscus.app/client.js';
@@ -873,7 +938,6 @@ document.addEventListener('DOMContentLoaded', function () {
             script.setAttribute('data-crossorigin', 'anonymous');
             script.async = true;
             container.appendChild(script);
-            giscusLoaded = true;
         }
 
         // Lazy load: only load when comments section is near viewport
@@ -897,10 +961,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentTheme = document.documentElement.getAttribute('data-theme');
                 var iframe = container.querySelector('.giscus-frame');
                 if (iframe && iframe.contentWindow) {
-                    iframe.contentWindow.postMessage(
-                        { giscus: { setConfig: { theme: currentTheme === 'dark' ? 'dark' : 'light' } } },
-                        'https://giscus.app'
-                    );
+                    try {
+                        iframe.contentWindow.postMessage(
+                            { giscus: { setConfig: { theme: currentTheme === 'dark' ? 'dark' : 'light' } } },
+                            'https://giscus.app'
+                        );
+                    } catch (err) {
+                        // postMessage failed (iframe may be cross-origin blocked) — reload with correct theme
+                        loadGiscus(currentTheme);
+                    }
                 } else {
                     // Giscus not yet loaded — trigger lazy load with correct theme
                     loadGiscus(currentTheme);

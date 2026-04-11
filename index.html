@@ -8,7 +8,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app 'sha256-SBqvde6eszAbC7r/Rapmayrt8h3IkICz3sMx6GN/v8M='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://github.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app 'sha256-SBqvde6eszAbC7r/Rapmayrt8h3IkICz3sMx6GN/v8M='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://avatars.github.com https://github.com https://githubusercontent.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <!-- Open Graph -->
     <meta property="og:title" content="Juyang Li · Zhejiang University">
@@ -106,7 +106,7 @@
                 </div>
             </div>
             <div class="hero-visual" aria-hidden="true">
-                <canvas id="neural-canvas" fetchpriority="high"></canvas>
+                <canvas id="neural-canvas"></canvas>
             </div>
         </div>
     </section>
@@ -217,12 +217,12 @@
         </div>
         <div class="container">
             <div class="projects-list">
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Deep Learning · Medical</span></div><div class="project-body"><h3>智能医疗影像诊断</h3><p>基于深度学习的CT及X光影像自动分析系统，辅助医生快速准确诊断。</p></div><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Embodied AI · Robotics</span></div><div class="project-body"><h3>具身智能操控系统</h3><p>基于视觉-语言-动作模型的机器人操控系统，实现复杂环境下的自主抓取与交互。</p></div><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Computer Vision · Autonomous</span></div><div class="project-body"><h3>自动驾驶感知系统</h3><p>实时目标检测和路径规划系统，实现安全可靠的自动驾驶体验。</p></div><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">LLM · Reasoning</span></div><div class="project-body"><h3>虚拟助手大模型</h3><p>超大规模语言模型，具备多轮对话、任务执行和知识推理能力。</p></div><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">GNN · Big Data</span></div><div class="project-body"><h3>推荐系统引擎</h3><p>基于图神经网络的个性化推荐，处理海量用户数据和复杂关系。</p></div><span class="project-arrow">→</span></a>
-                <a href="#" class="project-item"><div class="project-meta"><span class="project-tag">Unsupervised · Security</span></div><div class="project-body"><h3>异常检测平台</h3><p>无监督学习框架，用于检测网络、金融和工业数据中的异常模式。</p></div><span class="project-arrow">→</span></a>
+                <a href="#projects" class="project-item" aria-label="智能医疗影像诊断项目"><div class="project-meta"><span class="project-tag">Deep Learning · Medical</span></div><div class="project-body"><h3>智能医疗影像诊断</h3><p>基于深度学习的CT及X光影像自动分析系统，辅助医生快速准确诊断。</p></div><span class="project-arrow">→</span></a>
+                <a href="#projects" class="project-item" aria-label="具身智能操控系统项目"><div class="project-meta"><span class="project-tag">Embodied AI · Robotics</span></div><div class="project-body"><h3>具身智能操控系统</h3><p>基于视觉-语言-动作模型的机器人操控系统，实现复杂环境下的自主抓取与交互。</p></div><span class="project-arrow">→</span></a>
+                <a href="#projects" class="project-item" aria-label="自动驾驶感知系统项目"><div class="project-meta"><span class="project-tag">Computer Vision · Autonomous</span></div><div class="project-body"><h3>自动驾驶感知系统</h3><p>实时目标检测和路径规划系统，实现安全可靠的自动驾驶体验。</p></div><span class="project-arrow">→</span></a>
+                <a href="#projects" class="project-item" aria-label="虚拟助手大模型项目"><div class="project-meta"><span class="project-tag">LLM · Reasoning</span></div><div class="project-body"><h3>虚拟助手大模型</h3><p>超大规模语言模型，具备多轮对话、任务执行和知识推理能力。</p></div><span class="project-arrow">→</span></a>
+                <a href="#projects" class="project-item" aria-label="推荐系统引擎项目"><div class="project-meta"><span class="project-tag">GNN · Big Data</span></div><div class="project-body"><h3>推荐系统引擎</h3><p>基于图神经网络的个性化推荐，处理海量用户数据和复杂关系。</p></div><span class="project-arrow">→</span></a>
+                <a href="#projects" class="project-item" aria-label="异常检测平台项目"><div class="project-meta"><span class="project-tag">Unsupervised · Security</span></div><div class="project-body"><h3>异常检测平台</h3><p>无监督学习框架，用于检测网络、金融和工业数据中的异常模式。</p></div><span class="project-arrow">→</span></a>
             </div>
         </div>
     </section>
@@ -263,10 +263,10 @@
         </div>
         <div class="container">
             <div class="blog-filters">
-                <button class="blog-filter active" data-tag="all" data-i18n="blog.all">All</button>
-                <button class="blog-filter" data-tag="markdown">Markdown</button>
-                <button class="blog-filter" data-tag="pdf">PDF</button>
-                <button class="blog-filter" data-tag="tutorial">Tutorial</button>
+                <button class="blog-filter active" data-tag="all" data-i18n="blog.all" aria-pressed="true">All</button>
+                <button class="blog-filter" data-tag="markdown" aria-pressed="false">Markdown</button>
+                <button class="blog-filter" data-tag="pdf" aria-pressed="false">PDF</button>
+                <button class="blog-filter" data-tag="tutorial" aria-pressed="false">Tutorial</button>
             </div>
             <div class="blog-grid">
                 <a href="blog/md-viewer.html?file=hello-world.md" class="blog-card" data-tags="markdown">
@@ -331,8 +331,7 @@
     </footer>
 
     <!-- Terminal Mode (press ~ to toggle) -->
-    <div class="terminal-overlay" id="terminal" hidden>
-        <div class="terminal-window">
+    <div class="terminal-overlay" id="terminal" hidden role="dialog" aria-modal="true" aria-label="Terminal">
             <div class="terminal-header">
                 <span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span>
                 <span class="terminal-title">juyang@zju ~ press Esc to close</span>

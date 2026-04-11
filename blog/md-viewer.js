@@ -50,7 +50,8 @@ function initMarkdownViewer() {
     // Handle PDF
     if (ext === 'pdf') {
         container.className = '';
-        container.innerHTML = '<object data="' + file + '" type="application/pdf" width="100%" style="height:85vh;border-radius:12px;border:1px solid #e8e4df;"><p>Your browser does not support PDF viewing. <a href="' + file + '">Download PDF</a></p></object>';
+        var encodedFile = encodeURI(file);
+        container.innerHTML = '<object data="' + encodedFile + '" type="application/pdf" width="100%" style="height:85vh;border-radius:12px;border:1px solid #e8e4df;"><p>Your browser does not support PDF viewing. <a href="' + encodedFile + '">Download PDF</a></p></object>';
         return;
     }
 
@@ -88,7 +89,15 @@ function initMarkdownViewer() {
             container.className = 'md-content';
 
             // Parse markdown and sanitize with DOMPurify
-            var rawHtml = marked.parse(md);
+            var rawHtml;
+            try {
+                rawHtml = marked.parse(md);
+            } catch (e) {
+                throw new Error('Failed to parse markdown: ' + e.message);
+            }
+            if (!rawHtml || typeof rawHtml !== 'string' || rawHtml.trim() === '') {
+                throw new Error('Empty or invalid markdown content.');
+            }
             var cleanHtml = window.DOMPurify.sanitize(rawHtml, {
                 ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'hr', 'pre', 'code',
                     'blockquote', 'ul', 'ol', 'li', 'strong', 'em', 'del', 'a', 'img',
