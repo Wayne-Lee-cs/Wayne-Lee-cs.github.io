@@ -736,8 +736,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Reduced streams (fewer on mobile/low-end)
         var streams = [];
-        var streamCount = quality === 'low' ? 2 : (isMobile ? 4 : 6);
-        var maxConnections = quality === 'low' ? 3 : (isMobile ? 4 : 5);
+        var streamCount = isLowEnd ? 2 : (isMobile ? 4 : 6);
+        var maxConnections = isLowEnd ? 3 : (isMobile ? 4 : 5);
         for (var s = 0; s < streamCount; s++) {
             streams.push({
                 startPhi: Math.acos(2 * Math.random() - 1),
@@ -818,7 +818,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.lineWidth = 0.5;
             var threshold = R * 0.3;
             for (var i = 0; i < projected.length; i++) {
-                for (var j = i + 1; j < Math.min(i + maxConnections + 1, projected.length); j++) {
+                for (var j = i + 1; j < Math.min(i + maxConnections, projected.length); j++) {
                     var a = projected[i], b = projected[j];
                     var dx = a.px - b.px, dy = a.py - b.py;
                     var dist = Math.sqrt(dx * dx + dy * dy);
