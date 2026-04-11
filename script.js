@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var termCmds = {
             help: 'Available commands:\n  about    - About me\n  skills   - My tech stack\n  projects - List projects\n  blog     - Go to blog\n  contact  - Contact info\n  theme    - Toggle dark mode\n  clear    - Clear terminal\n  exit     - Close terminal',
             about: 'Juyang Li\nUndergraduate @ Zhejiang University\nMajor: Artificial Intelligence\nInterests: Deep Learning, Computer Vision, Embodied AI',
-            skills: 'Python ████████░░ 85%\nPyTorch █████░░░░░ 65%\nC/C++  ██████░░░░ 60%\nLinux  ███████░░░ 70%\nMath   ████████░░ 75%\nGit    ███████░░░ 70%',
+            skills: 'Python     [8/10]  85%\nPyTorch   [6/10]  65%\nC/C++     [6/10]  60%\nLinux     [7/10]  70%\nMath      [8/10]  75%\nGit       [7/10]  70%',
             projects: '1. 智能医疗影像诊断\n2. 具身智能操控系统\n3. 自动驾驶感知系统\n4. 虚拟助手大模型\n5. 推荐系统引擎\n6. 异常检测平台',
             contact: 'Email: lijuyang@zju.edu.cn\nGitHub: github.com/Wayne-Lee-cs',
             clear: '__clear__',
@@ -566,12 +566,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 var next = cur === 'dark' ? 'light' : 'dark';
                 document.documentElement.setAttribute('data-theme', next);
                 localStorage.setItem('theme', next);
+                // Update Giscus iframe theme
+                var giscusContainer = document.getElementById('giscus-container');
+                var iframe = giscusContainer ? giscusContainer.querySelector('.giscus-frame') : null;
+                if (iframe && iframe.contentWindow) {
+                    try {
+                        iframe.contentWindow.postMessage(
+                            { giscus: { setConfig: { theme: next === 'dark' ? 'dark' : 'light' } } },
+                            'https://giscus.app'
+                        );
+                    } catch (err) {
+                        // Silent fail - Giscus will reload with correct theme on next page load
+                    }
+                }
                 termAddLine('Theme switched to ' + next, 't-result');
                 return;
             }
             if (result.indexOf('__nav__') === 0) {
+                var target = result.replace('__nav__', '');
                 closeTerminal();
-                window.location.hash = result.replace('__nav__', '');
+                setTimeout(function() {
+                    var el = document.querySelector(target);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        window.location.hash = target;
+                    }
+                }, 50);
                 return;
             }
             termAddLine(result, 't-result');

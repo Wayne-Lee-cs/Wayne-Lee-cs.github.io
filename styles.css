@@ -184,6 +184,11 @@ strong { font-weight: 600; }
     padding: clamp(var(--space-12), 12vw, var(--space-16)) 0;
     content-visibility: auto;
     contain-intrinsic-size: auto 600px;
+    scroll-margin-top: 70px;
+}
+
+#blog {
+    scroll-margin-top: 70px;
 }
 
 
