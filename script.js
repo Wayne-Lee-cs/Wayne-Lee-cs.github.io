@@ -496,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.appendChild(egg);
     }
 
-    // ===== Terminal Mode (press ~ to toggle) =====
+    // ===== Terminal Mode (press ` to toggle) =====
     var terminalEl = document.getElementById('terminal');
     var terminalInput = document.getElementById('terminal-input');
     var terminalOutput = document.getElementById('terminal-output');
@@ -592,6 +592,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
                 termAddLine('Theme switched to ' + next, 't-result');
+                if (typeof window._drawRadar === 'function') window._drawRadar();
+                if (typeof window._updateLegendColors === 'function') window._updateLegendColors();
                 return;
             }
             if (result.indexOf('__nav__') === 0) {
@@ -691,10 +693,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // Performance-adaptive point count
         var isMobile = window.innerWidth <= 768;
         var isLowEnd = (navigator.hardwareConcurrency || 4) <= 4;
-        var quality = isMobile || isLowEnd ? 'low' : 'high';
         var points = [];
         var latLines, lonLines, totalPts;
-        if (quality === 'low') {
+        if (isLowEnd) {
             latLines = 5; lonLines = 8; totalPts = 60;
         } else if (isMobile) {
             latLines = 7; lonLines = 10; totalPts = 120;
@@ -762,7 +763,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function draw() {
             if (!isVisible) { animId = null; return; }
-            if (skipAnimation) { animId = null; return; }
             t += 0.016;
             ctx.clearRect(0, 0, rw, rh);
 

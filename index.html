@@ -10,6 +10,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://giscus.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://visitor-badge.laobi.icu https://avatars.githubusercontent.com https://avatars.github.com https://github.com https://githubusercontent.com; connect-src 'self' https://giscus.app; frame-src https://giscus.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests">
     <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="theme-init.js"></script>
     <!-- Open Graph -->
     <meta property="og:title" content="Juyang Li · Zhejiang University">
     <meta property="og:description" content="AI research driven by curiosity and purpose. Undergraduate at ZJU, majoring in Artificial Intelligence.">
@@ -57,7 +58,6 @@
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to content</a>
-    <script src="theme-init.js"></script>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -85,7 +85,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home main-content" class="hero" tabindex="-1">
+    <section id="home" class="hero"><span id="main-content" aria-hidden="true" tabindex="-1"></span>
         <div class="hero-inner">
             <div class="hero-content">
                 <p class="hero-eyebrow">Zhejiang University · Artificial Intelligence</p>
