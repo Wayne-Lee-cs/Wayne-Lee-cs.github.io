@@ -438,6 +438,25 @@ strong { font-weight: 600; }
     color: #ffffff;
 }
 
+/* ===== Focus Styles ===== */
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible,
+.theme-toggle:focus-visible,
+.lang-toggle:focus-visible,
+.mobile-toggle:focus-visible,
+.back-to-top:focus-visible,
+.blog-filter:focus-visible,
+.pub-link:focus-visible,
+.skip-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
 /* ===== Section Styles ===== */
 .section-light {
     background: var(--color-bg);

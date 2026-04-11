@@ -30,6 +30,7 @@
 
 // ===== Performance utilities =====
 (function() {
+    'use strict';
     // Mark start time for performance monitoring
     if (window.performance && performance.mark) {
         performance.mark('script-start');
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toggle.addEventListener('click', function() {
             menu.classList.toggle('open');
             document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+            toggle.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false');
         });
         var links = menu.querySelectorAll('.nav-link');
         for (var i = 0; i < links.length; i++) {
@@ -457,10 +459,10 @@ document.addEventListener('DOMContentLoaded', function () {
     })();
 
     // ===== Konami Code Easter Egg =====
-    var konamiSeq = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right B A
+    var konamiSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA']; // up up down down left right left right B A
     var konamiIdx = 0;
     document.addEventListener('keydown', function(e) {
-        if (e.keyCode === konamiSeq[konamiIdx]) {
+        if (e.code === konamiSeq[konamiIdx]) {
             konamiIdx++;
             if (konamiIdx === konamiSeq.length) {
                 konamiIdx = 0;
