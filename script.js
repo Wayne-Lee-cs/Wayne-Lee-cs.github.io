@@ -281,6 +281,46 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ===== 3D Tilt Card Effect =====
+    (function() {
+        var tiltCards = document.querySelectorAll('.project-item, .blog-card');
+        var MAX_TILT = 8; // degrees
+
+        function updateTilt(card, tiltX, tiltY, mx, my) {
+            card.style.setProperty('--mx', mx + '%');
+            card.style.setProperty('--my', my + '%');
+            // blog-card: preserve the hover lift (translateY(-2px)) from CSS
+            var isBlogCard = card.classList.contains('blog-card');
+            var baseTransform = isBlogCard ? 'translateY(-2px) ' : '';
+            card.style.transform =
+                baseTransform +
+                'perspective(800px) rotateX(' + tiltX.toFixed(2) + 'deg) rotateY(' + tiltY.toFixed(2) + 'deg)';
+            card.style.willChange = 'transform';
+        }
+
+        function resetTilt(card) {
+            card.style.transform = '';
+            card.style.setProperty('--mx', '50%');
+            card.style.setProperty('--my', '50%');
+            card.style.willChange = '';
+        }
+
+        tiltCards.forEach(function(card) {
+            card.addEventListener('mousemove', function(e) {
+                var rect = card.getBoundingClientRect();
+                var x = (e.clientX - rect.left) / rect.width;  // 0..1
+                var y = (e.clientY - rect.top) / rect.height;   // 0..1
+                var tiltX = (y - 0.5) * -MAX_TILT * 2;
+                var tiltY = (x - 0.5) * MAX_TILT * 2;
+                updateTilt(card, tiltX, tiltY, x * 100, y * 100);
+            }, { passive: true });
+
+            card.addEventListener('mouseleave', function() {
+                resetTilt(card);
+            }, { passive: true });
+        });
+    })();
+
     // ===== BibTeX Copy =====
     var bibData = {
         'li2026sample': '@article{li2026sample,\n  title={Sample Paper Title},\n  author={Li, Juyang and Zhang, Z},\n  journal={Conference Name},\n  year={2026}\n}'
