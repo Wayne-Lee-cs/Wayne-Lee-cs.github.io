@@ -283,6 +283,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ===== 3D Tilt Card Effect =====
     (function() {
+        // Skip on touch-only devices (hover:none) — CSS media query handles those
+        var isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+        if (isTouchDevice) return;
+
         var tiltCards = document.querySelectorAll('.project-item, .blog-card');
         var MAX_TILT = 8; // degrees
 
@@ -318,6 +322,22 @@ document.addEventListener('DOMContentLoaded', function () {
             card.addEventListener('mouseleave', function() {
                 resetTilt(card);
             }, { passive: true });
+        });
+
+        // Clean up will-change when page visibility changes (tab switch)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                tiltCards.forEach(function(card) {
+                    card.style.willChange = '';
+                });
+            }
+        });
+
+        // Clean up on page unload (window blur without mouseleave)
+        window.addEventListener('blur', function() {
+            tiltCards.forEach(function(card) {
+                card.style.willChange = '';
+            });
         });
     })();
 

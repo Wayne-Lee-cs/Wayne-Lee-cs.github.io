@@ -847,6 +847,24 @@ strong { font-weight: 600; }
     z-index: 2;
 }
 
+/* Mobile: disable 3D tilt and expensive effects to protect scroll performance */
+@media (hover: none) and (pointer: coarse) {
+    .project-item,
+    .blog-card {
+        transform-style: flat;
+    }
+
+    .project-item::before,
+    .blog-card::before {
+        display: none;
+    }
+
+    .project-item:hover,
+    .blog-card:hover {
+        transform: none;
+    }
+}
+
 .project-meta {
     display: flex;
     align-items: center;
