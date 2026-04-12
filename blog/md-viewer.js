@@ -51,7 +51,20 @@ function initMarkdownViewer() {
     if (ext === 'pdf') {
         container.className = '';
         var encodedFile = encodeURI(file);
-        container.innerHTML = '<object data="' + encodedFile + '" type="application/pdf" width="100%" style="height:85vh;border-radius:12px;border:1px solid #e8e4df;"><p>Your browser does not support PDF viewing. <a href="' + encodedFile + '">Download PDF</a></p></object>';
+        var fallbackText = document.createTextNode('Your browser does not support PDF viewing. ');
+        var fallbackLink = document.createElement('a');
+        fallbackLink.href = encodedFile;
+        fallbackLink.textContent = 'Download PDF';
+        var fallbackPara = document.createElement('p');
+        fallbackPara.appendChild(fallbackText);
+        fallbackPara.appendChild(fallbackLink);
+        var objectEl = document.createElement('object');
+        objectEl.setAttribute('data', encodedFile);
+        objectEl.setAttribute('type', 'application/pdf');
+        objectEl.setAttribute('width', '100%');
+        objectEl.style.cssText = 'height:85vh;border-radius:12px;border:1px solid #e8e4df;';
+        objectEl.appendChild(fallbackPara);
+        container.appendChild(objectEl);
         return;
     }
 

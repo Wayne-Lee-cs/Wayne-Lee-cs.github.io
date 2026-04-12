@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var current = document.documentElement.getAttribute('data-theme');
             var next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) { /* private browsing or storage full */ }
             if (typeof window._drawRadar === 'function') window._drawRadar();
             if (typeof window._updateLegendColors === 'function') window._updateLegendColors();
         });
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var i18n = {
         zh: {
             'nav.home':'首页','nav.about':'关于','nav.timeline':'经历','nav.projects':'项目','nav.publications':'论文','nav.blog':'博客','nav.contact':'联系',
-            'hero.desc':'我是浙江大学人工智能专业的本科生，专注于深度学习、计算机视觉和具身智能的前沿研究。','hero.projects':'查看项目','hero.contact':'联系我',
+            'hero.eyebrow':'浙江大学 · 人工智能专业','hero.desc':'我是浙江大学人工智能专业的本科生，专注于深度学习、计算机视觉和具身智能的前沿研究。','hero.projects':'查看项目','hero.contact':'联系我',
             'about.title':'探索人工智能的<br>前沿领域','about.desc':'我们的使命是推动人工智能技术的发展，并将其应用于解决实际问题。',
             'about.dl':'神经网络、卷积神经网络和循环神经网络的研究与应用，探索模型架构的创新边界。',
             'about.cv':'图像识别、目标检测和图像分割技术的创新，让机器真正理解视觉世界。',
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         en: {
             'nav.home':'Home','nav.about':'About','nav.timeline':'Timeline','nav.projects':'Projects','nav.publications':'Publications','nav.blog':'Blog','nav.contact':'Contact',
-            'hero.desc':'I\'m an undergraduate student at Zhejiang University, majoring in Artificial Intelligence. My work focuses on pushing the boundaries of deep learning, computer vision, and natural language processing.','hero.projects':'View Projects','hero.contact':'Get in Touch',
+            'hero.eyebrow':'Zhejiang University · Artificial Intelligence','hero.desc':'I\'m an undergraduate student at Zhejiang University, majoring in Artificial Intelligence. My work focuses on pushing the boundaries of deep learning, computer vision, and natural language processing.','hero.projects':'View Projects','hero.contact':'Get in Touch',
             'about.title':'Exploring the frontiers<br>of artificial intelligence','about.desc':'Our mission is to advance AI technology and apply it to solve real-world problems.',
             'about.dl':'Research and application of neural networks, CNNs, and RNNs, exploring the innovative boundaries of model architectures.',
             'about.cv':'Innovation in image recognition, object detection, and image segmentation, enabling machines to truly understand the visual world.',
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (langBtn) {
         langBtn.addEventListener('click', function() {
             currentLang = currentLang === 'zh' ? 'en' : 'zh';
-            localStorage.setItem('lang', currentLang);
+            try { localStorage.setItem('lang', currentLang); } catch (e) { /* private browsing or storage full */ }
             applyLang(currentLang);
             // Re-run typewriter with new language
             if (tw) {
@@ -950,6 +950,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
         function loadGiscus(theme) {
+            clearTimeout(giscusTimeout); // Cancel the error fallback timer
             // Remove old iframe + script so Giscus reinitializes with the correct theme
             var oldIframe = container.querySelector('.giscus-frame');
             var oldScript = container.querySelector('script[data-repo]');
@@ -989,6 +990,14 @@ document.addEventListener('DOMContentLoaded', function () {
             // Fallback: load immediately if IntersectionObserver not supported
             loadGiscus(currentTheme);
         }
+
+        // Fallback: if Giscus doesn't load within 10s, show error message
+        var giscusTimeout = setTimeout(function() {
+            var iframe = container.querySelector('.giscus-frame');
+            if (!iframe) {
+                container.innerHTML = '<p style="text-align:center;padding:24px;font-size:var(--text-sm);color:var(--color-text-tertiary)">Comments could not be loaded. <a href="https://github.com/Wayne-Lee-cs/Wayne-Lee-cs.github.io/issues" target="_blank" rel="noopener" style="color:var(--color-accent)">Leave a comment on GitHub</a></p>';
+            }
+        }, 10000);
 
         // Listen for theme changes — use postMessage to update Giscus theme without recreating iframe
         var themeBtn = document.querySelector('.theme-toggle');

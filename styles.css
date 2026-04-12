@@ -143,6 +143,19 @@ body {
     outline-offset: 2px;
 }
 
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 /* ===== Typography ===== */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
@@ -669,7 +682,7 @@ strong { font-weight: 600; }
 
 .timeline-content p {
     font-size: var(--text-sm);
-    color: rgba(250, 249, 247, 0.5);
+    color: rgba(250, 249, 247, 0.65);
     line-height: 1.7;
 }
 
@@ -745,7 +758,7 @@ strong { font-weight: 600; }
 
 .team-info p {
     font-size: var(--text-sm);
-    color: rgba(250, 249, 247, 0.5);
+    color: rgba(250, 249, 247, 0.65);
     line-height: 1.6;
 }
 
@@ -985,7 +998,7 @@ strong { font-weight: 600; }
 
 .blog-card p {
     font-size: var(--text-sm);
-    color: rgba(245, 243, 240, 0.5);
+    color: rgba(245, 243, 240, 0.65);
     line-height: 1.7;
     margin-bottom: var(--space-4);
 }
@@ -1027,7 +1040,7 @@ strong { font-weight: 600; }
 .contact-en {
     margin-top: var(--space-3);
     font-size: var(--text-sm);
-    color: rgba(250, 249, 247, 0.4);
+    color: rgba(250, 249, 247, 0.55);
 }
 
 .contact-block a {
@@ -1097,7 +1110,7 @@ strong { font-weight: 600; }
 
 .footer p {
     font-size: var(--text-xs);
-    color: rgba(250, 249, 247, 0.35);
+    color: rgba(250, 249, 247, 0.5);
 }
 
 .visitor-badge {
@@ -1191,18 +1204,17 @@ strong { font-weight: 600; }
 
 .back-to-top:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .back-to-top.visible:hover {
     background: rgba(128, 128, 128, 0.35);
     transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="dark"] .back-to-top.visible:hover {
     background: rgba(255, 255, 255, 0.16);
     color: #fff;
-    transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 

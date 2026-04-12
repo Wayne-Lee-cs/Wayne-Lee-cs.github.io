@@ -23,17 +23,16 @@
     <!-- Preconnect for critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <!-- Fonts: Clean, minimal typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+    <!-- Fonts: non-render-blocking with preload -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" as="style" crossorigin onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap"></noscript>
     <!-- Preconnect for third-party services -->
     <link rel="preconnect" href="https://giscus.app" crossorigin>
     <link rel="dns-prefetch" href="https://giscus.app">
     <link rel="preconnect" href="https://visitor-badge.laobi.icu">
     <link rel="dns-prefetch" href="https://visitor-badge.laobi.icu">
-    <link rel="dns-prefetch" href="https://avatars.githubusercontent.com">
-    <link rel="dns-prefetch" href="https://github.com">
+    <link rel="preconnect" href="https://avatars.githubusercontent.com">
+    <link rel="preconnect" href="https://github.com">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="website_head_page.jpg" type="image/jpeg">
     <!-- Structured Data -->
@@ -88,7 +87,7 @@
     <section id="home" class="hero"><span id="main-content" tabindex="-1" style="position:absolute;left:-9999px"></span>
         <div class="hero-inner">
             <div class="hero-content">
-                <p class="hero-eyebrow">Zhejiang University · Artificial Intelligence</p>
+                <p class="hero-eyebrow" data-i18n="hero.eyebrow">Zhejiang University · Artificial Intelligence</p>
                 <h1 class="hero-title" data-i18n="hero.title"><span class="typewriter" data-text-en="AI research driven by|curiosity and purpose" data-text-zh="以好奇心和使命感|驱动AI研究"></span></h1>
                 <p class="hero-description" data-i18n="hero.desc">I'm an undergraduate student at Zhejiang University, majoring in Artificial Intelligence. My work focuses on pushing the boundaries of deep learning, computer vision, and natural language processing.</p>
                 <div class="hero-actions">
@@ -145,6 +144,7 @@
             <div class="skills-wrap">
                 <canvas id="radar-canvas" width="400" height="400" aria-hidden="true"></canvas>
                 <div class="skills-legend" id="skills-legend"></div>
+                <p class="sr-only" id="skills-description">Skills proficiency radar chart showing: Python 85%, PyTorch 65%, C/C++ 60%, Linux 70%, Math 75%, Git 70%</p>
             </div>
         </div>
     </section>
@@ -260,7 +260,7 @@
                 <button class="blog-filter" data-tag="tutorial" aria-pressed="false">Tutorial</button>
             </div>
             <div class="blog-grid">
-                <a href="blog/md-viewer.html?file=hello-world.md" class="blog-card" data-tags="markdown" aria-label="第一篇博客：Hello World，Markdown 示例博客">
+                <a href="blog/md-viewer.html?file=hello-world.md" class="blog-card" data-tags="markdown" aria-label="Hello World">
                     <div class="blog-date">2026-03-29</div>
                     <h3>第一篇博客：Hello World</h3>
                     <p>用 Markdown 写的示例博客，展示代码块、表格、引用等格式。</p>
